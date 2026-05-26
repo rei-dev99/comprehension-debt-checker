@@ -9,6 +9,9 @@ module Authenticatable
   def authenticatable!
     token = request.authorization&.split(" ")&.last
 
+    # トークン確認用
+    # Rails.logger.debug "JWT Token: #{token}"
+
     unless token
       render json: { error: "Unauthorized" }, status: :unauthorized
       return
