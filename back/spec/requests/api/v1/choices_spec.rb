@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'Api::V1::Choices', type: :request do
   describe 'GET /api/v1/choices' do
+    let!(:user) { create(:user) }
     let!(:category) { create(:category) }
     let!(:question) { create(:question, category: category) }
     let!(:choice) { create(:choice, question: question) }
@@ -18,7 +19,7 @@ RSpec.describe 'Api::V1::Choices', type: :request do
       let(:headers) { { CONTENT_TYPE: 'application/json', Authorization: 'Bearer fake_token' } }
 
       before do
-        stub_authentication
+        stub_authentication(user)
       end
 
       it 'returns all choices with status 200' do
