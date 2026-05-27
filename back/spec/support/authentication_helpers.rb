@@ -1,12 +1,8 @@
 module AuthenticationHelper
-  # JWT認証データはスタブで固定
-  def stub_authentication
-    @user = {
-      uid: 'test@example.com',
-      provider: 'email',
-      email: 'test@example.com'
-    }
-
-    allow_any_instance_of(ApplicationController).to receive(:authenticatable!).and_return(@user)
+  def stub_authentication(user)
+    allow_any_instance_of(ApplicationController)
+      .to receive(:authenticatable!) do |controller|
+        controller.instance_variable_set(:@current_user, user)
+      end
   end
 end
