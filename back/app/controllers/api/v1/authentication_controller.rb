@@ -4,11 +4,7 @@ class Api::V1::AuthenticationController < ApplicationController
   include Authenticatable
 
   def login
-    if @current_user
-      render json: { user: @current_user }, status: :ok
-    else
-      render json: { error: "Unauthorized" }, status: :unauthorized
-    end
+    render json: { user: @current_user }, status: :ok
   end
 
   def login_email
@@ -35,6 +31,6 @@ class Api::V1::AuthenticationController < ApplicationController
       uid: params[:email]
     )
 
-    render json: { user: user }
+    render json: { user: user }, status: :created
   end
 end

@@ -1,5 +1,5 @@
 class Api::V1::ResultsController < ApplicationController
-  before_action :set_result, only: %i[ show destroy]
+  before_action :set_result, only: %i[ show ]
 
   def index
     @results = @current_user.results.all.order(created_at: :desc)
@@ -27,10 +27,6 @@ class Api::V1::ResultsController < ApplicationController
     )
 
     render json: result, status: :created
-  end
-
-  def destroy
-    @result.destroy
   end
 
   private
