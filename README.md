@@ -81,6 +81,8 @@ erDiagram
         bigint user_id FK
         string email
         string password_digest
+        string provider
+        string uid
         timestamp created_at
     }
 
