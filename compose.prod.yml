@@ -1,0 +1,11 @@
+services:
+  back:
+    build:
+      context: ./back
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - .env.production
+
+    restart: unless-stopped
