@@ -89,18 +89,9 @@ test:
 production:
   primary: &primary_production
     <<: *default
-    database: back_production
-    username: back
-    password: <%= ENV["BACK_DATABASE_PASSWORD"] %>
-  cache:
-    <<: *primary_production
-    database: back_production_cache
-    migrations_paths: db/cache_migrate
-  queue:
-    <<: *primary_production
-    database: back_production_queue
-    migrations_paths: db/queue_migrate
-  cable:
-    <<: *primary_production
-    database: back_production_cable
-    migrations_paths: db/cable_migrate
+    host: <%= ENV["DB_HOST"] %>
+    adapter: postgresql
+    port: 5432
+    database: <%= ENV["DB_NAME"] %>
+    username: <%= ENV["DB_USER"] %>
+    password: <%= ENV["DB_PASSWORD"] %>
