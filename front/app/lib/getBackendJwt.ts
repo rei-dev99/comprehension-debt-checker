@@ -6,6 +6,8 @@ import { createBackendJwt } from "./createBackendJwt";
 export async function getBackendJwt() {
 	const session = await auth();
 
+	console.log("session =", JSON.stringify(session));
+
 	if (!session?.user?.email || !session.user.provider || !session.user.uid) {
 		throw new Error("Invalid session");
 	}
