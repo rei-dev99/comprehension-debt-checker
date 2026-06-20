@@ -8,10 +8,16 @@ export async function createBackendJwt(payload: {
 	provider: string;
 	uid: string;
 }) {
-	const privateKey = await importPKCS8(
-		fs.readFileSync("keys/private.pem", "utf-8"),
-		"RS256",
-	);
+	let privateKeyPem: string;
+
+	// ローカル・本番環境によってファイル・環境変数の読み込みを分ける
+	if (process.env.JWT_PRIVATE_KEY) {
+		privateKeyPem = process.env.JWT_PRIVATE_KEY!.replace(/\\n/g, "\n");
+	} else {
+		privateKeyPem = fs.readFileSync("keys/private.pem", "utf-8");
+	}
+
+	const privateKey = await importPKCS8(privateKeyPem, "RS256");
 
 	return await new SignJWT(payload)
 		.setProtectedHeader({ alg: "RS256", typ: "JWT" })
