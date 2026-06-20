@@ -8,6 +8,12 @@ export async function createBackendJwt(payload: {
 	provider: string;
 	uid: string;
 }) {
+
+	console.log(
+		"JWT_PRIVATE_KEY exists:",
+		!!process.env.JWT_PRIVATE_KEY
+	);
+
 	let privateKeyPem: string;
 
 	// ローカル・本番環境によってファイル・環境変数の読み込みを分ける
