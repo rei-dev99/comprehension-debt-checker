@@ -94,3 +94,15 @@ production:
     database: <%= ENV["DB_NAME"] %>
     username: <%= ENV["DB_USER"] %>
     password: <%= ENV["DB_PASSWORD"] %>
+
+  cache:
+    <<: *primary_production
+    database: <%= ENV["DB_NAME"] %>
+
+  queue:
+    <<: *primary_production
+    database: <%= ENV["DB_NAME"] %>
+
+  cable:
+    <<: *primary_production
+    database: <%= ENV["DB_NAME"] %>
