@@ -4,6 +4,7 @@ import Google from "next-auth/providers/google";
 import { signInSchema } from "./app/lib/zod";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+	trustHost: true,
 	secret: process.env.AUTH_SECRET,
 	providers: [
 		Google,
