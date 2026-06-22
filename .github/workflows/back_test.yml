@@ -61,4 +61,9 @@ jobs:
         run: bundle exec rubocop
 
       - name: Run RSpec
+        env:
+          RAILS_ENV: test
+          DB_HOST: localhost
+          DB_USER: postgres
+          DB_PASSWORD: password
         run: bundle exec rspec
