@@ -46,8 +46,10 @@ jobs:
       - name: Setup Database
         env:
           RAILS_ENV: test
+          DB_HOST: localhost
+          DB_USER: postgres
+          DB_PASSWORD: password
         run: |
-          cp config/database.yml.ci config/database.yml
           bundle exec rails db:create
           bundle exec rails db:schema:load
 
