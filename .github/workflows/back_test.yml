@@ -43,6 +43,10 @@ jobs:
           ruby-version: 4.0.1
           bundler-cache: true
 
+      - name: Bundle install
+        working-directory: back
+        run: bundle install
+
       - name: Setup Database
         env:
           RAILS_ENV: test
