@@ -5,12 +5,10 @@ on:
     branches: [ main ]
     paths:
       - "front/**"
-      - ".github/workflows/front_test.yml"
   pull_request:
     branches: [ main ]
     paths:
       - "front/**"
-      - ".github/workflows/front_test.yml"
 
 jobs:
   test:
