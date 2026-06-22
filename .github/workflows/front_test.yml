@@ -27,6 +27,7 @@ jobs:
         with:
           node-version: '26'
           cache: 'npm'
+          cache-dependency-path: front/package-lock.json
 
       - name: Install dependencies
         run: npm ci
