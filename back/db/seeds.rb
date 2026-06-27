@@ -97,8 +97,8 @@ Choice.create!([
   { content: "分からない", score: 1, question: db_q5 },
 
   # Web技術に関する回答
-  { content: "違いを説明できる", score: 3, question: web_q1 },
-  { content: "なんとなく分かる", score: 2, question: web_q1 },
+  { content: "説明できる", score: 3, question: web_q1 },
+  { content: "違いは何となく分かる", score: 2, question: web_q1 },
   { content: "分からない", score: 1, question: web_q1 },
 
   { content: "意味がだいたい分かる", score: 3, question: web_q2 },
