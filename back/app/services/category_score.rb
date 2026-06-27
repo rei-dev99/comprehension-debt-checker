@@ -7,11 +7,13 @@ class CategoryScore
     set_scores
   end
 
+  private
+
   def set_scores
     scores = {
       ai: 0,
       algorithm: 0,
-      db: 0,
+      database: 0,
       web: 0
     }
 
@@ -26,7 +28,7 @@ class CategoryScore
       when "アルゴリズム基礎"
         scores[:algorithm] += choice.score
       when "データベース"
-        scores[:db] += choice.score
+        scores[:database] += choice.score
       when "Web基礎"
         scores[:web] += choice.score
       end
