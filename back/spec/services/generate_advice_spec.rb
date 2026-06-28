@@ -2,6 +2,16 @@ require 'rails_helper'
 
 RSpec.describe GenerateAdvice do
   describe '#call' do
+    let!(:category) { create(:category, name: "AI活用習慣") }
+    let!(:question1) { create(:question, id: 1, category: category) }
+    let!(:choice1) { create(:choice, question: question1, score: 3) }
+
+    let(:answers) do
+      {
+        question1.id => choice1.id
+      }
+    end
+
     let(:scores) do
       {
         ai: 10,
@@ -13,15 +23,20 @@ RSpec.describe GenerateAdvice do
 
     let(:dependency_score) { 65 }
 
-    it 'returns advice text' do
-      advice = described_class.new(scores, dependency_score).call
-
-      expect(advice).to be_present
-      expect(advice).to be_a(String)
+    let(:summaries) do
+      {
+        ai: "AI summary",
+        algorithm: "Algorithm summary",
+        database: "Database summary",
+        web: "Web summary"
+      }
     end
 
-    # NOTE:
-    # アドバイス文言・閾値は今後調整予定。
-    # 現時点では正常系のみテスト。
+    it 'returns advice text' do
+      advice = described_class.new(dependency_score, answers, summaries).call
+
+      expect(advice).to include("【AI活用】")
+      expect(advice).to include("AI summary")
+    end
   end
 end

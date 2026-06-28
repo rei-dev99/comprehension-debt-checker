@@ -4,7 +4,7 @@
 
 ## サービスURL
 
-デプロイ後、URLを入れる
+https://debt-lens.org/
 
 ## サービス概要
 理解負債チェッカーとは、AI時代のプログラミング学習診断・改善アプリです。
@@ -132,13 +132,16 @@ erDiagram
 - 簡易診断ロジック
 - 診断履歴保存
 - Rails API + Next.js 構成
+- Docker環境整備
+- RailsをAWS EC2へデプロイ
+- Next.jsをAmplifyへデプロイ
+- GitHub Actions による CIで、Rubocop / RSpec / Biome 実行
 
 ### 今後実装予定
-- Docker環境整備
-- RailsをAWSへデプロイ
-- Next.jsをCloudFrontへデプロイ
-- GitHub Actions による CI/CD
 - UI / UX 改善
+- 診断結果一覧改善
+- マイページ改善
+- LPの充実
 - テスト強化
 
 ## 技術的な工夫
