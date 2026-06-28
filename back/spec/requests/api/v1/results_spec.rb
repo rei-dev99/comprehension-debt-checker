@@ -102,15 +102,16 @@ RSpec.describe 'Api::V1::Results', type: :request do
 
         allow_any_instance_of(DependencyScore)
           .to receive(:call)
-          .and_return([
-            {
-              ai: 10,
-              algorithm: 8,
-              db: 7,
-              web: 5
-            },
-            65
-          ])
+          .and_return(65)
+
+        allow_any_instance_of(CategoryScore)
+          .to receive(:call)
+          .and_return(
+            ai: 10,
+            algorithm: 8,
+            database: 7,
+            web: 5
+          )
 
         allow_any_instance_of(GenerateAdvice)
           .to receive(:call)
