@@ -13,17 +13,20 @@ class Api::V1::ResultsController < ApplicationController
   def create
     answers = params[:answers]
 
-    scores, dependency_score = DependencyScore.new(answers).call
-    advice = GenerateAdvice.new(scores, dependency_score).call
+    # 回答からカテゴリー別スコアを集計
+    scores = CategoryScore.new(answers).call
+
+    # AI活用に関する回答のみをもとに依存度を算出
+    dependency_score = DependencyScore.new(answers).call
+
+    # 各カテゴリーの総評を生成
+    summaries = build_summaries(scores)
+
+    # 総評と質問別アドバイスを組み合わせて診断結果を作成
+    advice = GenerateAdvice.new(dependency_score, answers, summaries).call
 
     result = Result.create!(
-      ai_score: scores[:ai],
-      algorithm_score: scores[:algorithm],
-      db_score: scores[:db],
-      web_score: scores[:web],
-      dependency_score: dependency_score,
-      advice: advice,
-      user_id: @current_user.id
+      build_result_params(scores, dependency_score, advice)
     )
 
     render json: result, status: :created
@@ -33,5 +36,26 @@ class Api::V1::ResultsController < ApplicationController
 
   def set_result
     @result = @current_user.results.find(params[:id])
+  end
+
+  def build_summaries(scores)
+    {
+      ai: CategorySummary::Ai.new(scores[:ai]).call,
+      algorithm: CategorySummary::Algorithm.new(scores[:algorithm]).call,
+      database: CategorySummary::Database.new(scores[:database]).call,
+      web: CategorySummary::Web.new(scores[:web]).call
+    }
+  end
+
+  def build_result_params(scores, dependency_score, advice)
+    {
+      ai_score: scores[:ai],
+      algorithm_score: scores[:algorithm],
+      db_score: scores[:database],
+      web_score: scores[:web],
+      dependency_score: dependency_score,
+      advice: advice,
+      user_id: @current_user.id
+    }
   end
 end
