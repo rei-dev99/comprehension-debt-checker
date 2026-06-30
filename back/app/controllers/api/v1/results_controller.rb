@@ -1,9 +1,15 @@
 class Api::V1::ResultsController < ApplicationController
+  include Pagination
   before_action :set_result, only: %i[ show ]
 
   def index
-    @results = @current_user.results.all.order(created_at: :desc)
-    render status: :ok, json: @results
+    @results = @current_user.results.all.order(created_at: :desc).page(params[:page]).per(5)
+    @pagination = resources_with_pagination(@results)
+
+    render json: {
+      results: @results,
+      pagination: resources_with_pagination(@results)
+    }, status: :ok
   end
 
   def show
