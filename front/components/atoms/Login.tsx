@@ -1,6 +1,6 @@
 "use client";
-import { handleGoogleLogin } from "@/actions/handleGoogleLogin";
 import Image from "next/image";
+import { handleGoogleLogin } from "@/actions/handleGoogleLogin";
 
 export default function Login() {
 	return (

@@ -100,7 +100,13 @@ export default function ResultDetail() {
 					<p className="whitespace-pre-line text-left mt-6">{result.advice}</p>
 				</div>
 			</div>
-			<div className="mt-10"><p>あなたの現在の学習状況をもとに診断しています。<br />診断結果は現時点での傾向ですので、学習を続けた後にもう一度診断すると、成長を確認できます。</p></div>
+			<div className="mt-10">
+				<p>
+					あなたの現在の学習状況をもとに診断しています。
+					<br />
+					診断結果は現時点での傾向ですので、学習を続けた後にもう一度診断すると、成長を確認できます。
+				</p>
+			</div>
 		</div>
 	);
 }
