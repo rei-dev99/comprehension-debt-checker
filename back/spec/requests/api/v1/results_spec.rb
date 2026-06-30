@@ -60,7 +60,7 @@ RSpec.describe 'Api::V1::Results', type: :request do
 
           json = response.parsed_body
 
-          expect(json.first).to include(
+          expect(json['results'].first).to include(
             'id',
             'ai_score',
             'algorithm_score',
@@ -72,6 +72,15 @@ RSpec.describe 'Api::V1::Results', type: :request do
             'updated_at',
             'user_id'
             )
+
+          expect(json['pagination']).to include(
+            'current',
+            'previous',
+            'next',
+            'limit_value',
+            'pages',
+            'count'
+          )
         end
       end
     end
