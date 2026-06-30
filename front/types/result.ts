@@ -6,5 +6,19 @@ export interface Result {
 	web_score: number;
 	dependency_score: number;
 	advice: string;
-	created_at: Date;
+	created_at: string;
+}
+
+export interface Pagination {
+	current: number;
+	previous: number | null;
+	next: number | null;
+	limit_value: number;
+	pages: number;
+	count: number;
+}
+
+export interface ResultsResponse {
+	results: Result[];
+	pagination: Pagination;
 }
