@@ -2,26 +2,26 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import type { Result } from "@/types/result";
+import ReactPaginate from "react-paginate";
+import type { Result, ResultsResponse } from "@/types/result";
 import { requireAuth } from "../lib/requireAuth";
 import fetchResults from "../lib/results";
 
 export default function Result() {
-	const [results, setResults] = useState<Result[]>([]);
+	const [results, setResults] = useState<ResultsResponse | null>(null);
+
+	const [currentPage, setCurrentPage] = useState(1);
 
 	useEffect(() => {
-		const session = async () => await requireAuth();
-		session();
-	}, []);
+		const initialize = async () => {
+			await requireAuth();
 
-	useEffect(() => {
-		const fetchData = async () => {
-			const data = await fetchResults();
+			const data = await fetchResults(currentPage);
 			setResults(data);
 		};
 
-		fetchData();
-	}, []);
+		initialize();
+	}, [currentPage]);
 
 	const getDependencyLabel = (score: number) => {
 		if (score >= 70) return "🔴 要注意";
@@ -29,12 +29,26 @@ export default function Result() {
 		return "🟢 良好";
 	};
 
+	const scrollTop = () => {
+		setTimeout(() => {
+			window.scrollTo({
+				top: 0,
+				behavior: "smooth",
+			});
+		}, 0);
+	};
+
+	const handlePageChange = (item: { selected: number }) => {
+		setCurrentPage(item.selected + 1);
+		scrollTop();
+	};
+
 	return (
 		<div className="min-h-screen bg-gray-50 py-16">
 			<h2 className="text-4xl font-bold text-center mb-10">診断結果一覧</h2>
-			{results.length !== 0 ? (
+			{results && results.results.length > 0 ? (
 				<div className="max-w-4xl mx-auto grid gap-6 px-4">
-					{results.map((result) => (
+					{results.results.map((result) => (
 						<Link
 							key={result.id}
 							href={`/results/${result.id}`}
@@ -65,6 +79,23 @@ export default function Result() {
 							</div>
 						</Link>
 					))}
+
+					<ReactPaginate
+						forcePage={currentPage - 1}
+						breakLabel="..."
+						nextLabel=">"
+						onPageChange={handlePageChange}
+						pageCount={results.pagination.pages}
+						previousLabel="<"
+						renderOnZeroPageCount={null}
+						// ===== css =====
+						containerClassName="mt-8 flex items-center justify-center gap-2"
+						pageLinkClassName="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full bg-sky-600 text-sm font-bold text-white transition-opacity duration-200 hover:opacity-70"
+						activeLinkClassName="bg-yellow-500 ring-2 ring-yellow-300"
+						previousLinkClassName="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-sky-600 text-sky-600 transition-opacity duration-200 hover:opacity-70"
+						nextLinkClassName="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-sky-600 text-sky-600 transition-opacity duration-200 hover:opacity-70"
+						disabledClassName="hidden"
+					/>
 				</div>
 			) : (
 				<div className="py-20 text-center text-slate-500">
