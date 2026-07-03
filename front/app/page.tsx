@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { handleLogin } from "@/actions/handleLogin";
 import { auth } from "@/auth";
+import GuestForm from "@/components/forms/GuestForm";
 
 export default async function Home() {
 	const session = await auth();
@@ -34,15 +34,7 @@ export default async function Home() {
 						>
 							診断してみる
 						</Link>
-						<form action={handleLogin}>
-							<input type="hidden" name="guest" value="guest" />
-							<button
-								type="submit"
-								className="rounded-2xl bg-orange-500 px-8 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-orange-600 mt-6"
-							>
-								ゲストで試す
-							</button>
-						</form>
+						<GuestForm />
 					</>
 				)}
 			</section>
