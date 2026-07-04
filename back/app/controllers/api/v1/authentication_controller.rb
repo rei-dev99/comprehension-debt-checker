@@ -13,13 +13,21 @@ class Api::V1::AuthenticationController < ApplicationController
     if credential&.authenticate(params[:password])
       render json: { user: credential }
     else
-      render json: { error: "error" }, status: :unauthorized
+      render json: {
+        code: "invalid_credentials",
+        field: "password",
+        message: "メールアドレスまたはパスワードが違います"
+      }, status: :unauthorized
     end
   end
 
   def signup_email
     if UserCredential.exists?(email: params[:email], provider: "email")
-      return render json: { error: "Already exists" }, status: :unprocessable_entity
+      return render json: {
+        code: "already_exists",
+        "field": "email",
+        message: "このメールアドレスは既に登録されています"
+      }, status: :unprocessable_entity
     end
 
     user = User.create!(status: "active")

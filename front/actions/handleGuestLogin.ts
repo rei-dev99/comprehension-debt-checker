@@ -5,42 +5,39 @@ import { redirect } from "next/navigation";
 import { createBackendJwt } from "@/app/lib/createBackendJwt";
 import { signIn } from "@/auth";
 
-export default async function handleSignup(credentials: {
-	email: string;
-	password: string;
-}) {
-	const { email, password } = credentials;
-	const signupResponse = await fetch(
-		`${process.env.NEXT_PUBLIC_API_BASE_URL}/signup_email`,
+export async function handleGuestLogin() {
+	const guestResponse = await fetch(
+		`${process.env.NEXT_PUBLIC_API_BASE_URL}/guest_login`,
 		{
 			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({ email, password }),
+			headers: {
+				"Content-Type": "application/json",
+			},
 		},
 	);
 
-	if (!signupResponse.ok) {
-		const error = await signupResponse.json();
-		return {
-			success: false,
-			error,
-		};
+	if (!guestResponse.ok) {
+		return;
 	}
+
+	const guestData = await guestResponse.json();
+
+	const email = guestData.user.email;
+	const provider = guestData.user.provider;
+	const uid = guestData.user.uid;
 
 	await signIn("credentials", {
 		redirect: false,
-		loginType: "email",
-		email,
-		password,
+		loginType: "guest",
 	});
 
 	const backendJwt = await createBackendJwt({
-		email: String(email),
-		provider: "email",
-		uid: String(email),
+		email,
+		provider,
+		uid,
 	});
 
-	const loginResponse = await fetch(
+	const response = await fetch(
 		`${process.env.NEXT_PUBLIC_API_BASE_URL}/login`,
 		{
 			method: "POST",
@@ -51,11 +48,11 @@ export default async function handleSignup(credentials: {
 		},
 	);
 
-	if (!loginResponse.ok) {
+	if (!response.ok) {
 		return;
 	}
 
-	const data = await loginResponse.json();
+	const data = await response.json();
 
 	const cookieStore = await cookies();
 
@@ -71,3 +68,5 @@ export default async function handleSignup(credentials: {
 
 	redirect("/mypage");
 }
+
+export default handleGuestLogin;

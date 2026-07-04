@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
-import { signInSchema } from "./app/lib/zod";
+import { credentialSchema } from "./app/lib/zod";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
 	trustHost: true,
@@ -34,7 +34,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 				} else {
 					try {
 						const { email, password } =
-							await signInSchema.parseAsync(credentials);
+							await credentialSchema.parseAsync(credentials);
 						const res = await fetch(
 							`${process.env.NEXT_PUBLIC_API_BASE_URL}/login_email`,
 							{
@@ -51,7 +51,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 							uid: data.user.uid,
 							email: credentials.email as string,
 						};
-					} catch {
+					} catch (e) {
+						console.error(e);
 						return null;
 					}
 				}
