@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Login from "@/components/atoms/Login";
-import { requireSession } from "../lib/requireSession";
 import { SignupForm } from "@/components/forms/SignupForm";
+import { requireSession } from "../lib/requireSession";
 
 export default async function SignupPage() {
 	await requireSession();

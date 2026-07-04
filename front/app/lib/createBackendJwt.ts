@@ -8,7 +8,6 @@ export async function createBackendJwt(payload: {
 	provider: string;
 	uid: string;
 }) {
-
 	let privateKeyPem: string;
 
 	// ローカル・本番環境によってファイル・環境変数の読み込みを分ける

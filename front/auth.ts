@@ -33,7 +33,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 					};
 				} else {
 					try {
-						const { email, password } = await credentialSchema.parseAsync(credentials);
+						const { email, password } =
+							await credentialSchema.parseAsync(credentials);
 						const res = await fetch(
 							`${process.env.NEXT_PUBLIC_API_BASE_URL}/login_email`,
 							{
@@ -50,7 +51,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 							uid: data.user.uid,
 							email: credentials.email as string,
 						};
-					} catch {
+					} catch (e) {
+						console.error(e);
 						return null;
 					}
 				}

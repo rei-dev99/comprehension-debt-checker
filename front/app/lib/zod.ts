@@ -4,7 +4,7 @@ export const numberPattern = /(?=.*\d)/;
 
 export const credentialSchema = z.object({
 	email: z
-	    .string()
+		.string()
 		.min(1, "メールアドレスを入力してください")
 		.email("正しいメールアドレスを入力してください"),
 	password: z

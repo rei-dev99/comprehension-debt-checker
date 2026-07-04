@@ -6,32 +6,32 @@ import { createBackendJwt } from "@/app/lib/createBackendJwt";
 import { signIn } from "@/auth";
 
 export async function handleGuestLogin() {
-    const guestResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/guest_login`,
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        },
-    );
+	const guestResponse = await fetch(
+		`${process.env.NEXT_PUBLIC_API_BASE_URL}/guest_login`,
+		{
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+		},
+	);
 
-    if (!guestResponse.ok) {
-        return;
-    }
+	if (!guestResponse.ok) {
+		return;
+	}
 
-    const guestData = await guestResponse.json();
+	const guestData = await guestResponse.json();
 
-    const email = guestData.user.email;
-    const provider = guestData.user.provider;
-    const uid = guestData.user.uid;
+	const email = guestData.user.email;
+	const provider = guestData.user.provider;
+	const uid = guestData.user.uid;
 
-    await signIn("credentials", {
-        redirect: false,
-        loginType: "guest",
-    });
+	await signIn("credentials", {
+		redirect: false,
+		loginType: "guest",
+	});
 
-    // Rails JWT作成
+	// Rails JWT作成
 	const backendJwt = await createBackendJwt({
 		email,
 		provider,
@@ -70,4 +70,4 @@ export async function handleGuestLogin() {
 	redirect("/mypage");
 }
 
-export default handleGuestLogin
+export default handleGuestLogin;
