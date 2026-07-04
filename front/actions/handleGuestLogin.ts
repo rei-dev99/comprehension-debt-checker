@@ -31,7 +31,6 @@ export async function handleGuestLogin() {
 		loginType: "guest",
 	});
 
-	// Rails JWT作成
 	const backendJwt = await createBackendJwt({
 		email,
 		provider,
