@@ -5,14 +5,11 @@ import { redirect } from "next/navigation";
 import { createBackendJwt } from "@/app/lib/createBackendJwt";
 import { signIn } from "@/auth";
 
-export default async function handleSignup(formData: FormData) {
-	const email = formData.get("email");
-	const password = formData.get("password");
-
-	if (!email || !password) {
-		return;
-	}
-
+export default async function handleSignup(credentials: {
+	email: string;
+	password: string;
+}) {
+	const { email, password } = credentials;
 	const signupResponse = await fetch(
 		`${process.env.NEXT_PUBLIC_API_BASE_URL}/signup_email`,
 		{
@@ -23,7 +20,11 @@ export default async function handleSignup(formData: FormData) {
 	);
 
 	if (!signupResponse.ok) {
-		return;
+		const error = await signupResponse.json();
+		return {
+			success: false,
+			error,
+		};
 	}
 
 	await signIn("credentials", {
