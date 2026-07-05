@@ -75,11 +75,10 @@ AIに依存したまま学習を進めると、自力で問題を解決する力
 | カテゴリごとのスコアやAI依存度を可視化し、学習改善のためのアドバイスを表示します。 |
 | [![Image from Gyazo](https://i.gyazo.com/a28459a1a4612848be1223dd80710925.gif)](https://gyazo.com/a28459a1a4612848be1223dd80710925) |
 
-
 | 診断結果一覧ページ |
 |:-----------:|
 | 過去の診断結果を一覧で確認し、自分の理解度の変化を振り返ることができます。 |
-| [![Image from Gyazo](https://i.gyazo.com/fe24687ed589a3995d819fb56cd58a88.gif)](https://gyazo.com/fe24687ed589a3995d819fb56cd58a88) |
+| [![Image from Gyazo](https://i.gyazo.com/36880b4d5ac9dbca83325ca6135c6857.gif)](https://gyazo.com/36880b4d5ac9dbca83325ca6135c6857) |
 
 ## 使用技術
 | カテゴリ | 使用技術 |
