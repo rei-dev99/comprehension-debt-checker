@@ -78,7 +78,7 @@ AIに依存したまま学習を進めると、自力で問題を解決する力
 | 診断結果一覧ページ |
 |:-----------:|
 | 過去の診断結果を一覧で確認し、自分の理解度の変化を振り返ることができます。 |
-| [![Image from Gyazo](https://i.gyazo.com/36880b4d5ac9dbca83325ca6135c6857.gif)](https://gyazo.com/36880b4d5ac9dbca83325ca6135c6857) |
+| [![Image from Gyazo](https://i.gyazo.com/94e671b99b7acacbf91658d46b5b62ab.png)](https://gyazo.com/94e671b99b7acacbf91658d46b5b62ab) |
 
 ## 使用技術
 | カテゴリ | 使用技術 |
