@@ -119,7 +119,7 @@ erDiagram
 
 ## インフラ構成図
 
-<img width="667" height="766" alt="理解負債チェッカーインフラ構成図" src="https://github.com/user-attachments/assets/86f9ecad-44c4-46b0-9dbe-a9f9559d2772" />
+<img width="667" height="766" alt="理解負債チェッカーインフラ構成図" src="https://github.com/user-attachments/assets/e7079a54-8b80-4087-9f5f-9d391c39aa73" />
 
 ## 開発状況
 
