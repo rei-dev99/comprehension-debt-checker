@@ -109,11 +109,11 @@ RSpec.describe 'Api::V1::Results', type: :request do
       before do
         stub_authentication(user)
 
-        allow_any_instance_of(DependencyScore)
+        allow_any_instance_of(Diagnosis::Scoring::DependencyScore)
           .to receive(:call)
           .and_return(65)
 
-        allow_any_instance_of(CategoryScore)
+        allow_any_instance_of(Diagnosis::Scoring::CategoryScore)
           .to receive(:call)
           .and_return(
             ai: 10,
@@ -122,7 +122,7 @@ RSpec.describe 'Api::V1::Results', type: :request do
             web: 5
           )
 
-        allow_any_instance_of(GenerateAdvice)
+        allow_any_instance_of(Diagnosis::Advice::GenerateAdvice)
           .to receive(:call)
           .and_return('テストアドバイス')
       end
