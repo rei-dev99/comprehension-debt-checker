@@ -20,16 +20,16 @@ class Api::V1::ResultsController < ApplicationController
     answers = params[:answers]
 
     # 回答からカテゴリー別スコアを集計
-    scores = CategoryScore.new(answers).call
+    scores = Diagnosis::Scoring::CategoryScore.new(answers).call
 
     # AI活用に関する回答のみをもとに依存度を算出
-    dependency_score = DependencyScore.new(answers).call
+    dependency_score = Diagnosis::Scoring::DependencyScore.new(answers).call
 
     # 各カテゴリーの総評を生成
     summaries = build_summaries(scores)
 
     # 総評と質問別アドバイスを組み合わせて診断結果を作成
-    advice = GenerateAdvice.new(dependency_score, answers, summaries).call
+    advice = Diagnosis::Advice::GenerateAdvice.new(dependency_score, answers, summaries).call
 
     result = Result.create!(
       build_result_params(scores, dependency_score, advice)
@@ -46,10 +46,10 @@ class Api::V1::ResultsController < ApplicationController
 
   def build_summaries(scores)
     {
-      ai: CategorySummary::Ai.new(scores[:ai]).call,
-      algorithm: CategorySummary::Algorithm.new(scores[:algorithm]).call,
-      database: CategorySummary::Database.new(scores[:database]).call,
-      web: CategorySummary::Web.new(scores[:web]).call
+      ai: Diagnosis::CategorySummary::Ai.new(scores[:ai]).call,
+      algorithm: Diagnosis::CategorySummary::Algorithm.new(scores[:algorithm]).call,
+      database: Diagnosis::CategorySummary::Database.new(scores[:database]).call,
+      web: Diagnosis::CategorySummary::Web.new(scores[:web]).call
     }
   end
 
