@@ -4,7 +4,7 @@ RSpec.describe Diagnosis::Advice::GenerateAdvice do
   describe '#call' do
     let!(:category) { create(:category, name: "AI活用習慣") }
     let!(:question1) { create(:question, id: 1, category: category) }
-    let!(:choice1) { create(:choice, question: question1, score: 3) }
+    let!(:choice1) { create(:choice, question: question1, score: 3, feedback: "3を選びました。") }
 
     let(:answers) do
       {
@@ -37,6 +37,7 @@ RSpec.describe Diagnosis::Advice::GenerateAdvice do
 
       expect(advice).to include("【AI活用】")
       expect(advice).to include("AI summary")
+      expect(advice).to include(choice1.feedback)
     end
   end
 end

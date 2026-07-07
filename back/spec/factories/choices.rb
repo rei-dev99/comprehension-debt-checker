@@ -4,5 +4,6 @@ FactoryBot.define do
 
     sequence(:content) { |n| "choice_#{n}" }
     score { 2 }
+    feedback { "フィードバックです。" }
   end
 end
