@@ -136,6 +136,7 @@ erDiagram
       bigint question_id FK
       string content
       integer score
+      text feedback
     }
 
     results {
