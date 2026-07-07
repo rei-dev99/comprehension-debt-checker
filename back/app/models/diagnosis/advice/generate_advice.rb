@@ -54,9 +54,7 @@ module Diagnosis
           choice = Choice.find(choice_id)
           question = choice.question
           category = question.category
-
-          klass = "Diagnosis::Questions::Q#{question.id}".constantize
-          advice = klass.new(choice.score).call
+          advice = choice.feedback
 
           case category.name
           when "AI活用習慣"
