@@ -17,19 +17,11 @@ class Api::V1::ResultsController < ApplicationController
   end
 
   def create
-    answers = params[:answers]
-
-    # 回答からカテゴリー別スコアを集計
-    scores = Diagnosis::Scoring::CategoryScore.new(answers).call
-
-    # AI活用に関する回答のみをもとに依存度を算出
+    answers = params[:answers].permit!.to_h.transform_keys(&:to_i).transform_values(&:to_i)
     dependency_score = Diagnosis::Scoring::DependencyScore.new(answers).call
-
-    # 各カテゴリーの総評を生成
-    summaries = build_summaries(scores)
-
-    # 総評と質問別アドバイスを組み合わせて診断結果を作成
-    advice = Diagnosis::Advice::GenerateAdvice.new(dependency_score, answers, summaries).call
+    scores = Diagnosis::Scoring::CategoryScore.new(answers).call
+    category_results = build_category_results(scores, answers)
+    advice = Diagnosis::Advice::GenerateAdvice.new(category_results).call
 
     result = Result.create!(
       build_result_params(scores, dependency_score, advice)
@@ -44,24 +36,54 @@ class Api::V1::ResultsController < ApplicationController
     @result = @current_user.results.find(params[:id])
   end
 
-  def build_summaries(scores)
-    {
-      ai: Diagnosis::CategorySummary::Ai.new(scores[:ai]).call,
-      algorithm: Diagnosis::CategorySummary::Algorithm.new(scores[:algorithm]).call,
-      database: Diagnosis::CategorySummary::Database.new(scores[:database]).call,
-      web: Diagnosis::CategorySummary::Web.new(scores[:web]).call
-    }
+  def build_category_results(scores, answers)
+    scores.map do |category, score|
+      {
+        category: category.name,
+        summary: build_summary(category, score),
+        advices: build_advices(category, answers)
+      }
+    end
   end
 
+  def build_summary(category, score)
+    CategorySummary
+      .where(category: category)
+      .find_by(
+        "min_score <= ? AND max_score >= ?",
+        score,
+        score
+      )&.summary
+  end
+
+  def build_advices(category, answers)
+    answers.filter_map do |question_id, choice_id|
+      choice = Choice.find(choice_id)
+
+      next unless choice.question.category == category
+
+      choice.feedback
+    end
+  end
+
+  # resultテーブルを見直して固定のカテゴリー関係なくなるように今後保守する。
   def build_result_params(scores, dependency_score, advice)
     {
-      ai_score: scores[:ai],
-      algorithm_score: scores[:algorithm],
-      db_score: scores[:database],
-      web_score: scores[:web],
+      ai_score: find_score(scores, "AI活用習慣"),
+      algorithm_score: find_score(scores, "アルゴリズム基礎"),
+      db_score: find_score(scores, "データベース"),
+      web_score: find_score(scores, "Web基礎"),
       dependency_score: dependency_score,
       advice: advice,
       user_id: @current_user.id
     }
+  end
+
+  def find_score(scores, category_name)
+    category = scores.keys.find do |category|
+      category.name == category_name
+    end
+
+    scores[category]
   end
 end

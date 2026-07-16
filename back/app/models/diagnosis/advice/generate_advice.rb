@@ -1,10 +1,8 @@
 module Diagnosis
   module Advice
     class GenerateAdvice
-      def initialize(dependency_score, answers, summaries)
-        @dependency_score = dependency_score
-        @answers = answers
-        @summaries = summaries
+      def initialize(category_results)
+        @category_results = category_results
       end
 
       def call
@@ -14,61 +12,16 @@ module Diagnosis
       private
 
       def build_message
-        advices = build_question_advices(@answers)
-        <<~ADVICE
-        【AI活用】
-        #{@summaries[:ai]}
+        @category_results.map do |category|
+          <<~TEXT
+          【#{category[:category]}】
+          #{category[:summary]}
 
-        ■あなたへのアドバイス
-        #{advices[:ai].map { |advice| "・#{advice}" }.join("\n") }
+          ■あなたへのアドバイス
+          #{category[:advices].map { |advice| "・#{advice}" }.join("\n")}
 
-        【アルゴリズム】
-        #{@summaries[:algorithm]}
-
-        ■あなたへのアドバイス
-        #{advices[:algorithm].map { |advice| "・#{advice}" }.join("\n") }
-
-        【データベース】
-        #{@summaries[:database]}
-
-        ■あなたへのアドバイス
-        #{advices[:database].map { |advice| "・#{advice}" }.join("\n") }
-
-        【Web基礎】
-        #{@summaries[:web]}
-
-        ■あなたへのアドバイス
-        #{advices[:web].map { |advice| "・#{advice}" }.join("\n") }
-        ADVICE
-      end
-
-      def build_question_advices(answers)
-        result = {
-          ai: [],
-          algorithm: [],
-          database: [],
-          web: []
-        }
-
-        answers.each do |question_id, choice_id|
-          choice = Choice.find(choice_id)
-          question = choice.question
-          category = question.category
-          advice = choice.feedback
-
-          case category.name
-          when "AI活用習慣"
-            result[:ai] << advice
-          when "アルゴリズム基礎"
-            result[:algorithm] << advice
-          when "データベース"
-            result[:database] << advice
-          when "Web基礎"
-            result[:web] << advice
-          end
-        end
-
-        result
+          TEXT
+        end.join("\n")
       end
     end
   end

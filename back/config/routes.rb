@@ -3,6 +3,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :health, only: :index
       resources :categories, only: %i[index]
+      resources :category_summaries, only: %i[index]
       resources :questions, only: %i[index]
       resources :choices, only: %i[index]
       resources :results
