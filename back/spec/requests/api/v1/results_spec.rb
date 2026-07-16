@@ -106,8 +106,57 @@ RSpec.describe 'Api::V1::Results', type: :request do
     end
 
     describe 'POST /api/v1/results' do
+      let!(:ai_category) { create(:category, name: 'AI活用習慣') }
+      let!(:algorithm_category) { create(:category, name: 'アルゴリズム基礎') }
+      let!(:database_category) { create(:category, name: 'データベース') }
+      let!(:web_category) { create(:category, name: 'Web基礎') }
+
+      let!(:answers) do
+        {}.tap do |hash|
+          [
+            ai_category,
+            algorithm_category,
+            database_category,
+            web_category
+          ].each do |category|
+            question = create(:question, category: category)
+
+            choice = create(
+              :choice,
+              question: question,
+              feedback: 'テストフィードバック'
+            )
+
+            hash[question.id] = choice.id
+          end
+        end
+      end
+
+      let(:request_params) do
+        {
+          answers: answers
+        }
+      end
+
       before do
         stub_authentication(user)
+
+        categories = [
+          ai_category,
+          algorithm_category,
+          database_category,
+          web_category
+        ]
+
+        categories.each do |category|
+          create(
+            :category_summary,
+            category: category,
+            min_score: 0,
+            max_score: 15,
+            summary: "#{category.name}まとめ"
+          )
+        end
 
         allow_any_instance_of(Diagnosis::Scoring::DependencyScore)
           .to receive(:call)
@@ -116,10 +165,12 @@ RSpec.describe 'Api::V1::Results', type: :request do
         allow_any_instance_of(Diagnosis::Scoring::CategoryScore)
           .to receive(:call)
           .and_return(
-            ai: 10,
-            algorithm: 8,
-            database: 7,
-            web: 5
+            {
+              ai_category => 10,
+              algorithm_category => 8,
+              database_category => 7,
+              web_category => 5
+            }
           )
 
         allow_any_instance_of(Diagnosis::Advice::GenerateAdvice)

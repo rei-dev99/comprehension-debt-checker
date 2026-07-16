@@ -2,42 +2,24 @@ require 'rails_helper'
 
 RSpec.describe Diagnosis::Advice::GenerateAdvice do
   describe '#call' do
-    let!(:category) { create(:category, name: "AI活用習慣") }
-    let!(:question1) { create(:question, id: 1, category: category) }
-    let!(:choice1) { create(:choice, question: question1, score: 3, feedback: "3を選びました。") }
-
-    let(:answers) do
-      {
-        question1.id => choice1.id
-      }
-    end
-
-    let(:scores) do
-      {
-        ai: 10,
-        algorithm: 8,
-        db: 7,
-        web: 5
-      }
-    end
-
-    let(:dependency_score) { 65 }
-
-    let(:summaries) do
-      {
-        ai: "AI summary",
-        algorithm: "Algorithm summary",
-        database: "Database summary",
-        web: "Web summary"
-      }
+    let(:category_results) do
+      [
+        {
+          category: "AI活用習慣",
+          summary: "AIの総評です。",
+          advices: [
+            "フィードバックです。"
+          ]
+        }
+      ]
     end
 
     it 'returns advice text' do
-      advice = described_class.new(dependency_score, answers, summaries).call
+      advice = described_class.new(category_results).call
 
-      expect(advice).to include("【AI活用】")
-      expect(advice).to include("AI summary")
-      expect(advice).to include(choice1.feedback)
+      expect(advice).to include("【AI活用習慣】")
+      expect(advice).to include("AIの総評です。")
+      expect(advice).to include("フィードバックです。")
     end
   end
 end

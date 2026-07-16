@@ -99,9 +99,9 @@ AIに依存したまま学習を進めると、自力で問題を解決する力
 erDiagram
     users ||--o{ results : ユーザーは複数の診断結果を参照できる
     users ||--|{ user_credentials : ユーザーは登録情報を保存する
-
     categories ||--o{ questions : "カテゴリーは複数の質問を持つ"
     questions ||--o{ choices : "質問は複数の選択肢を持つ"
+    categories ||--o{ category_summaries : カテゴリーはスコアごとに複数の総評を持つ
 
     users {
         bigint id PK
@@ -149,6 +149,14 @@ erDiagram
         integer dependency_score
         text advice
         timestamp created_at
+    }
+
+    category_summaries {
+        bigint id PK
+        bigint category_id FK
+        integer min_score
+        integer max_score
+        text summary
     }
 ```
 
