@@ -27,7 +27,7 @@ web_q3 = Question.find_or_create_by!(content: "HTTP通信の基本的な流れ�
 web_q4 = Question.find_or_create_by!(content: "CookieとSessionの違いについて説明できますか？", category: web)
 web_q5 = Question.find_or_create_by!(content: "DOMやJSONの役割を理解していますか？", category: web)
 
-CategorySummary.find_or_create_by!([
+category_summaries = [
   { category: ai, min_score: 12, max_score: 15, summary: "AIを適切に活用できています。今のようにAIを参考にしつつ、自分で考える時間も続けることで、理解をさらに深められます。" },
   { category: ai, min_score: 9, max_score: 11, summary: "AIは活用できていますが、自分で考える時間も意識するとさらに理解が深まります。AIの回答をそのまま使うのではなく、「なぜそうなるのか」を確認する習慣を続けてみましょう。" },
   { category: ai, min_score: 5, max_score: 8, summary: "AIに頼る場面がやや多い傾向があります。まずは5分だけ自分で考えてからAIを使う習慣を取り入れると、自力で解決できる力が身につきます。" },
@@ -40,10 +40,20 @@ CategorySummary.find_or_create_by!([
   { category: web, min_score: 12, max_score: 15, summary: "Webの基礎はしっかり身についています。HTTP通信やAPIの流れを意識しながら実装すると、より実践的な力が身につきます。" },
   { category: web, min_score: 9, max_score: 11, summary: "基本的なWebの知識は身についています。リクエストからレスポンスまでの流れを意識すると、さらに理解が深まります。" },
   { category: web, min_score: 5, max_score: 8, summary: "Webの基礎を復習すると理解が深まりそうです。まずはHTTP・URL・Cookie・Session・Webの仕組みなど、基本的な仕組みから学び直してみましょう。" }
-])
+]
+
+category_summaries.each do |attrs|
+  CategorySummary.find_or_create_by!(
+    category: attrs[:category],
+    min_score: attrs[:min_score],
+    max_score: attrs[:max_score]
+  ) do |summary|
+    summary.summary = attrs[:summary]
+  end
+end
 
 # スコアは高ければ良い
-Choice.find_or_create_by!([
+choices = [
   # AIに関する回答
   { content: "エラー文を読み、自分で原因を整理してから調べる", score: 3, question: ai_q1, feedback:  "しっかりと自分で考える習慣が身についています。この調子で、原因を整理してからAIを活用する姿勢を続けていきましょう。" },
   { content: "まずコードを見直してからAIを使う", score: 2, question: ai_q1, feedback: "いい傾向です。コードを見直したらエラーも確認してみましょう。" },
@@ -127,4 +137,14 @@ Choice.find_or_create_by!([
   { content: "役割を説明できる", score: 3, question: web_q5, feedback: "DOMやJSONの役割は理解できています。簡単なAPI通信などを作るとさらに理解が深まります。" },
   { content: "名前は知っている", score: 2, question: web_q5, feedback: "実際にDOMやJSONを操作してみたり、簡単なAPI通信を作ることにも挑戦すると理解が深まります。" },
   { content: "分からない", score: 1, question: web_q5, feedback: "JSONを実際に表示してみたり、DOMを操作する簡単なサンプルを動かしてみると理解しやすくなります。" }
-])
+]
+
+choices.each do |attrs|
+  Choice.find_or_create_by!(
+    question: attrs[:question],
+    content: attrs[:content]
+  ) do |choice|
+    choice.score = attrs[:score]
+    choice.feedback = attrs[:feedback]
+  end
+end
