@@ -1,33 +1,33 @@
-ai = Category.create!(name: "AI活用習慣")
-algo = Category.create!(name: "アルゴリズム基礎")
-db = Category.create!(name: "データベース")
-web = Category.create!(name: "Web基礎")
+ai = Category.find_or_create_by!(name: "AI活用習慣")
+algo = Category.find_or_create_by!(name: "アルゴリズム基礎")
+db = Category.find_or_create_by!(name: "データベース")
+web = Category.find_or_create_by!(name: "Web基礎")
 
-ai_q1 = Question.create!(content: "エラーが出た時、まず何をしますか？", category: ai)
-ai_q2 = Question.create!(content: "AIの回答は、どのように扱いますか？", category: ai)
-ai_q3 = Question.create!(content: "AIを使う前に、自分で確認することはありますか？", category: ai)
-ai_q4 = Question.create!(content: "書いたコードを見て、意図を説明できますか？", category: ai)
-ai_q5 = Question.create!(content: "AIを自分にとってどう使うものだと思いますか？", category: ai)
+ai_q1 = Question.find_or_create_by!(content: "エラーが出た時、まず何をしますか？", category: ai)
+ai_q2 = Question.find_or_create_by!(content: "AIの回答は、どのように扱いますか？", category: ai)
+ai_q3 = Question.find_or_create_by!(content: "AIを使う前に、自分で確認することはありますか？", category: ai)
+ai_q4 = Question.find_or_create_by!(content: "書いたコードを見て、意図を説明できますか？", category: ai)
+ai_q5 = Question.find_or_create_by!(content: "AIを自分にとってどう使うものだと思いますか？", category: ai)
 
-algo_q1 = Question.create!(content: "if文とfor文を組み合わせて処理の流れを考えられますか？", category: algo)
-algo_q2 = Question.create!(content: "配列の要素を取り出して扱えますか？", category: algo)
-algo_q3 = Question.create!(content: "関数を使って処理をまとめる意図を理解していますか？", category: algo)
-algo_q4 = Question.create!(content: "コードの流れを順番に追って説明できますか？", category: algo)
-algo_q5 = Question.create!(content: "簡単な処理を自分で組み立てるのは得意ですか？", category: algo)
+algo_q1 = Question.find_or_create_by!(content: "if文とfor文を組み合わせて処理の流れを考えられますか？", category: algo)
+algo_q2 = Question.find_or_create_by!(content: "配列の要素を取り出して扱えますか？", category: algo)
+algo_q3 = Question.find_or_create_by!(content: "関数を使って処理をまとめる意図を理解していますか？", category: algo)
+algo_q4 = Question.find_or_create_by!(content: "コードの流れを順番に追って説明できますか？", category: algo)
+algo_q5 = Question.find_or_create_by!(content: "簡単な処理を自分で組み立てるのは得意ですか？", category: algo)
 
-db_q1 = Question.create!(content: "テーブル同士の関連付けについて説明できますか？", category: db)
-db_q2 = Question.create!(content: "外部キーの役割を知っていますか？", category: db)
-db_q3 = Question.create!(content: "どのテーブルにどのデータが入るか意識して設計できますか？", category: db)
-db_q4 = Question.create!(content: "JOINが何のために使われるか分かりますか？", category: db)
-db_q5 = Question.create!(content: "ORMを使う目的を説明できますか？", category: db)
+db_q1 = Question.find_or_create_by!(content: "テーブル同士の関連付けについて説明できますか？", category: db)
+db_q2 = Question.find_or_create_by!(content: "外部キーの役割を知っていますか？", category: db)
+db_q3 = Question.find_or_create_by!(content: "どのテーブルにどのデータが入るか意識して設計できますか？", category: db)
+db_q4 = Question.find_or_create_by!(content: "JOINが何のために使われるか分かりますか？", category: db)
+db_q5 = Question.find_or_create_by!(content: "ORMを使う目的を説明できますか？", category: db)
 
-web_q1 = Question.create!(content: "GETとPOSTの違いを説明できますか？", category: web)
-web_q2 = Question.create!(content: "HTTPのステータスコードを見て大まかな意味が分かりますか？", category: web)
-web_q3 = Question.create!(content: "HTTP通信の基本的な流れを知っていますか？", category: web)
-web_q4 = Question.create!(content: "CookieとSessionの違いについて説明できますか？", category: web)
-web_q5 = Question.create!(content: "DOMやJSONの役割を理解していますか？", category: web)
+web_q1 = Question.find_or_create_by!(content: "GETとPOSTの違いを説明できますか？", category: web)
+web_q2 = Question.find_or_create_by!(content: "HTTPのステータスコードを見て大まかな意味が分かりますか？", category: web)
+web_q3 = Question.find_or_create_by!(content: "HTTP通信の基本的な流れを知っていますか？", category: web)
+web_q4 = Question.find_or_create_by!(content: "CookieとSessionの違いについて説明できますか？", category: web)
+web_q5 = Question.find_or_create_by!(content: "DOMやJSONの役割を理解していますか？", category: web)
 
-CategorySummary.create!([
+CategorySummary.find_or_create_by!([
   { category: ai, min_score: 12, max_score: 15, summary: "AIを適切に活用できています。今のようにAIを参考にしつつ、自分で考える時間も続けることで、理解をさらに深められます。" },
   { category: ai, min_score: 9, max_score: 11, summary: "AIは活用できていますが、自分で考える時間も意識するとさらに理解が深まります。AIの回答をそのまま使うのではなく、「なぜそうなるのか」を確認する習慣を続けてみましょう。" },
   { category: ai, min_score: 5, max_score: 8, summary: "AIに頼る場面がやや多い傾向があります。まずは5分だけ自分で考えてからAIを使う習慣を取り入れると、自力で解決できる力が身につきます。" },
@@ -43,7 +43,7 @@ CategorySummary.create!([
 ])
 
 # スコアは高ければ良い
-Choice.create!([
+Choice.find_or_create_by!([
   # AIに関する回答
   { content: "エラー文を読み、自分で原因を整理してから調べる", score: 3, question: ai_q1, feedback:  "しっかりと自分で考える習慣が身についています。この調子で、原因を整理してからAIを活用する姿勢を続けていきましょう。" },
   { content: "まずコードを見直してからAIを使う", score: 2, question: ai_q1, feedback: "いい傾向です。コードを見直したらエラーも確認してみましょう。" },
