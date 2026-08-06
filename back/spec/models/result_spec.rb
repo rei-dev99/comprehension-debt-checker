@@ -11,8 +11,8 @@ RSpec.describe Result, type: :model do
     end
 
     describe 'presence validation' do
-      context 'when advice is blank' do
-        let(:result) { build(:result, advice: nil) }
+      context 'when advices is blank' do
+        let(:result) { build(:result, advices: nil) }
 
         it 'is invalid' do
           expect(result).to be_invalid
