@@ -71,7 +71,8 @@ export default function Result() {
 								</h3>
 
 								<p className="text-gray-600">
-									{result.advice.substring(0, 150) + "..."}
+									{"【" + result.advices.ai?.name + "】"}
+									{result.advices.ai?.summary?.substring(0, 150) + "..."}
 								</p>
 								<p className="mt-4 text-blue-500 text-sm font-medium">
 									詳細を見る →
