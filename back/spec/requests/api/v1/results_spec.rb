@@ -67,7 +67,7 @@ RSpec.describe 'Api::V1::Results', type: :request do
             'db_score',
             'web_score',
             'dependency_score',
-            'advice',
+            'advices',
             'created_at',
             'updated_at',
             'user_id'
@@ -100,16 +100,16 @@ RSpec.describe 'Api::V1::Results', type: :request do
         expect(json).to include(
             'id',
             'dependency_score',
-            'advice'
+            'advices'
         )
       end
     end
 
     describe 'POST /api/v1/results' do
-      let!(:ai_category) { create(:category, name: 'AI活用習慣') }
-      let!(:algorithm_category) { create(:category, name: 'アルゴリズム基礎') }
-      let!(:database_category) { create(:category, name: 'データベース') }
-      let!(:web_category) { create(:category, name: 'Web基礎') }
+      let!(:ai_category) { create(:category, name: 'AI活用習慣', slug: 'ai') }
+      let!(:algorithm_category) { create(:category, name: 'アルゴリズム基礎', slug: 'algorithm') }
+      let!(:database_category) { create(:category, name: 'データベース', slug: 'db') }
+      let!(:web_category) { create(:category, name: 'Web基礎', slug: 'web') }
 
       let!(:answers) do
         {}.tap do |hash|
@@ -172,10 +172,6 @@ RSpec.describe 'Api::V1::Results', type: :request do
               web_category => 5
             }
           )
-
-        allow_any_instance_of(Diagnosis::Advice::GenerateAdvice)
-          .to receive(:call)
-          .and_return('テストアドバイス')
       end
 
       it 'creates result with status 201' do
@@ -189,7 +185,7 @@ RSpec.describe 'Api::V1::Results', type: :request do
 
         json = response.parsed_body
 
-        expect(json['advice']).to eq('テストアドバイス')
+        expect(json['advices']['ai']['summary']).to eq("AI活用習慣まとめ")
         expect(json['dependency_score']).to eq(65)
       end
     end

@@ -21,10 +21,10 @@ class Api::V1::ResultsController < ApplicationController
     dependency_score = Diagnosis::Scoring::DependencyScore.new(answers).call
     scores = Diagnosis::Scoring::CategoryScore.new(answers).call
     category_results = build_category_results(scores, answers)
-    advice = Diagnosis::Advice::GenerateAdvice.new(category_results).call
+    advices = Diagnosis::Advice::GenerateAdvice.new(category_results).call
 
     result = Result.create!(
-      build_result_params(scores, dependency_score, advice)
+      build_result_params(scores, dependency_score, advices)
     )
 
     render json: result, status: :created
@@ -40,6 +40,7 @@ class Api::V1::ResultsController < ApplicationController
     scores.map do |category, score|
       {
         category: category.name,
+        slug: category.slug,
         summary: build_summary(category, score),
         advices: build_advices(category, answers)
       }
@@ -67,14 +68,14 @@ class Api::V1::ResultsController < ApplicationController
   end
 
   # resultテーブルを見直して固定のカテゴリー関係なくなるように今後保守する。
-  def build_result_params(scores, dependency_score, advice)
+  def build_result_params(scores, dependency_score, advices)
     {
       ai_score: find_score(scores, "AI活用習慣"),
       algorithm_score: find_score(scores, "アルゴリズム基礎"),
       db_score: find_score(scores, "データベース"),
       web_score: find_score(scores, "Web基礎"),
       dependency_score: dependency_score,
-      advice: advice,
+      advices: advices,
       user_id: @current_user.id
     }
   end

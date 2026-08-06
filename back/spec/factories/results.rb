@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :result do
     association :user
-    sequence(:advice) { |n| "advice_#{n}"  }
+    advices { { data: { name: "AI", summary: "summary", advices: [ "advice" ] } } }
     ai_score { 10 }
     algorithm_score { 10 }
     db_score { 10 }
