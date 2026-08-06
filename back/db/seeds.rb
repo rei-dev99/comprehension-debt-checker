@@ -1,7 +1,7 @@
-ai = Category.find_or_create_by!(name: "AI活用習慣")
-algo = Category.find_or_create_by!(name: "アルゴリズム基礎")
-db = Category.find_or_create_by!(name: "データベース")
-web = Category.find_or_create_by!(name: "Web基礎")
+ai = Category.find_or_create_by!(name: "AI活用習慣", slug: "ai")
+algo = Category.find_or_create_by!(name: "アルゴリズム基礎", slug: "algorithm")
+db = Category.find_or_create_by!(name: "データベース", slug: "db")
+web = Category.find_or_create_by!(name: "Web基礎", slug: "web")
 
 ai_q1 = Question.find_or_create_by!(content: "エラーが出た時、まず何をしますか？", category: ai)
 ai_q2 = Question.find_or_create_by!(content: "AIの回答は、どのように扱いますか？", category: ai)
