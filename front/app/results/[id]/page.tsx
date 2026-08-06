@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
@@ -69,6 +70,13 @@ export default function ResultDetail() {
 				? "warning"
 				: "safe";
 
+	const categoryStyles: Record<string, string> = {
+		ai: "bg-blue-50 border-blue-200",
+		algorithm: "bg-green-50 border-green-200",
+		db: "bg-purple-50 border-purple-200",
+		web: "bg-orange-50 border-orange-200",
+	};
+
 	return (
 		<div className="text-center py-15">
 			<h2 className="text-3xl font-bold mb-2">診断結果</h2>
@@ -97,7 +105,23 @@ export default function ResultDetail() {
 					{dependencyLevel === "danger" && <p>🔴 要注意</p>}
 					{dependencyLevel === "warning" && <p>🟡 注意</p>}
 					{dependencyLevel === "safe" && <p>🟢 良好</p>}
-					<p className="whitespace-pre-line text-left mt-6">{result.advice}</p>
+					{Object.entries(result.advices).map(
+						([slug, { name, summary, advices }]) => (
+							<div
+								key={slug}
+								className={`whitespace-pre-line text-left mt-6 p-4 rounded border ${categoryStyles[slug] ?? ""}`}
+							>
+								<h2>【{name}】</h2>
+								<p>{summary}</p>
+								<h3 className="mt-4">【あなたへのアドバイス】</h3>
+								<ul>
+									{advices.map((a, i) => (
+										<li key={i}>・{a}</li>
+									))}
+								</ul>
+							</div>
+						),
+					)}
 				</div>
 			</div>
 			<div className="mt-10">
@@ -106,6 +130,21 @@ export default function ResultDetail() {
 					<br />
 					診断結果は現時点での傾向ですので、学習を続けた後にもう一度診断すると、成長を確認できます。
 				</p>
+			</div>
+
+			<div className="mt-6 flex justify-center flex-col md:flex-row gap-4">
+				<Link
+					href="/question"
+					className="rounded-2xl bg-sky-500 px-8 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-sky-600"
+				>
+					もう一度診断する
+				</Link>
+				<Link
+					href="/results"
+					className="rounded-2xl bg-orange-500 px-8 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-orange-600"
+				>
+					診断一覧へ
+				</Link>
 			</div>
 		</div>
 	);

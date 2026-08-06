@@ -6,6 +6,7 @@ RSpec.describe Diagnosis::Advice::GenerateAdvice do
       [
         {
           category: "AI活用習慣",
+          slug: "ai",
           summary: "AIの総評です。",
           advices: [
             "フィードバックです。"
@@ -17,9 +18,9 @@ RSpec.describe Diagnosis::Advice::GenerateAdvice do
     it 'returns advice text' do
       advice = described_class.new(category_results).call
 
-      expect(advice).to include("【AI活用習慣】")
-      expect(advice).to include("AIの総評です。")
-      expect(advice).to include("フィードバックです。")
+      expect(advice["ai"][:name]).to eq("AI活用習慣")
+      expect(advice["ai"][:summary]).to eq("AIの総評です。")
+      expect(advice["ai"][:advices]).to eq([ "フィードバックです。" ])
     end
   end
 end

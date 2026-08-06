@@ -1,7 +1,7 @@
 class Result < ApplicationRecord
   belongs_to :user
 
-  validates :advice, presence: true
+  validates :advices, presence: true
 
   validates :ai_score,  presence: true, numericality: { in: 0..15 }
   validates :algorithm_score,  presence: true, numericality: { in: 0..15 }

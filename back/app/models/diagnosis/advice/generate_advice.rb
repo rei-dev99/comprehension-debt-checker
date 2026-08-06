@@ -6,22 +6,21 @@ module Diagnosis
       end
 
       def call
-        build_message
+        build_json_message
       end
 
       private
 
-      def build_message
-        @category_results.map do |category|
-          <<~TEXT
-          【#{category[:category]}】
-          #{category[:summary]}
+      def build_json_message
+        json = Hash.new { |h, k| h[k] = {} }
 
-          ■あなたへのアドバイス
-          #{category[:advices].map { |advice| "・#{advice}" }.join("\n")}
+        @category_results.each do |category|
+          json[category[:slug]][:name] = category[:category]
+          json[category[:slug]][:summary] = category[:summary]
+          json[category[:slug]][:advices] = category[:advices]
+        end
 
-          TEXT
-        end.join("\n")
+        json
       end
     end
   end

@@ -1,3 +1,9 @@
+export interface CategoryAdvice {
+	name: string;
+	summary: string;
+	advices: string[];
+}
+
 export interface Result {
 	id: number;
 	ai_score: number;
@@ -5,7 +11,7 @@ export interface Result {
 	db_score: number;
 	web_score: number;
 	dependency_score: number;
-	advice: string;
+	advices: Record<string, CategoryAdvice>;
 	created_at: string;
 }
 
