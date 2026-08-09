@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 
 const guestRoutes = ["/login", "/signup"];
-const protectedRoutes = ["/questions", "/results", "/mypage"];
+const protectedRoutes = ["/question", "/results", "/mypage"];
 
 export default auth((req) => {
 	const session = req.auth;
