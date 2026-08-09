@@ -1,11 +1,201 @@
 openapi: 3.0.3
 info:
-  title: AI Dependency API
+  title: 理解負債チェッカー API
   version: 1.0.0
+  description: |
+    Rails APIモードで実装されたバックエンドのAPI仕様。
+    認証はRS256のJWTを`Authorization: Bearer <token>`で送る方式（front側で署名、back側の公開鍵で検証）。
+    JWT検証は`back/app/controllers/concerns/authenticatable.rb`、詳細は`back/CLAUDE.md`を参照。
+
+    `GET /api/v1/users`はルーティングは定義されているが`Api::V1::UsersController`に`index`アクションが未実装のため、
+    現状すべてのリクエストが404になる。実装され次第このファイルに追記すること。
+
 paths:
-  /api/v1/users:
+  /api/v1/health:
+    get:
+      summary: ヘルスチェック
+      tags: [Health]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+
+  /api/v1/categories:
+    get:
+      summary: カテゴリ一覧（質問・選択肢を含む）
+      tags: [Categories]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CategoryWithQuestions"
+
+  /api/v1/category_summaries:
+    get:
+      summary: カテゴリ別の総評マスタ一覧
+      description: エンドポイント名は「category_summaries」だが、実体はCategoryを起点にネストした一覧を返す。
+      tags: [Categories]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CategoryWithSummaries"
+
+  /api/v1/questions:
+    get:
+      summary: 質問一覧
+      tags: [Questions]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Question"
+
+  /api/v1/choices:
+    get:
+      summary: 選択肢一覧
+      tags: [Choices]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Choice"
+
+  /api/v1/results:
+    get:
+      summary: 診断結果一覧（自分の分のみ、ページネーション付き）
+      tags: [Results]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: ページ番号（1ページ5件）
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Result"
+                  pagination:
+                    $ref: "#/components/schemas/Pagination"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
     post:
-      summary: ユーザー登録
+      summary: 診断結果の作成（回答を送信しスコア・アドバイスを算出）
+      tags: [Results]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [answers]
+              properties:
+                answers:
+                  type: object
+                  description: "質問ID(string) -> 選択したchoiceID(integer)のマップ"
+                  additionalProperties:
+                    type: integer
+                  example:
+                    "1": 1
+                    "2": 4
+                    "3": 8
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Result"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /api/v1/results/{id}:
+    get:
+      summary: 診断結果詳細（自分の結果のみ取得可）
+      tags: [Results]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Result"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          description: 自分の診断結果に存在しないID
+
+  /api/v1/login:
+    post:
+      summary: プロバイダログイン（Google等）でのユーザー取得・自動作成
+      description: |
+        リクエストボディ無し。frontが署名したJWT（provider/uid/emailをclaimに含む）をAuthorizationヘッダーで送る。
+        `provider`+`uid`に一致する`UserCredential`が無ければ`User`と`UserCredential`をその場で自動作成する。
+      tags: [Authentication]
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: "#/components/schemas/User"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /api/v1/login_email:
+    post:
+      summary: メール・パスワードによるログイン
+      tags: [Authentication]
       requestBody:
         required: true
         content:
@@ -19,31 +209,60 @@ paths:
                 password:
                   type: string
       responses:
-        "201":
-          description: Created
+        "200":
+          description: OK
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  id:
-                    type: integer
-                  email:
-                    type: string
+                  user:
+                    $ref: "#/components/schemas/UserCredential"
+        "401":
+          description: メールアドレスまたはパスワードが違う
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
 
-  /api/v1/login:
+  /api/v1/signup_email:
     post:
-      summary: ログイン
+      summary: メール・パスワードによる新規登録
+      tags: [Authentication]
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               type: object
+              required: [email, password]
               properties:
                 email:
                   type: string
                 password:
                   type: string
+                  minLength: 8
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: "#/components/schemas/User"
+        "422":
+          description: メールアドレスが既に登録されている
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+
+  /api/v1/guest_login:
+    post:
+      summary: ゲストログイン（ランダムなメール・パスワードでUser/UserCredentialを自動作成）
+      tags: [Authentication]
       responses:
         "200":
           description: OK
@@ -52,43 +271,8 @@ paths:
               schema:
                 type: object
                 properties:
-                  token:
-                    type: string
-
-  /api/v1/results:
-    get:
-      summary: 診断履歴取得
-      security:
-        - bearerAuth: []
-      responses:
-        "200":
-          description: OK
-
-    post:
-      summary: 診断結果保存
-      security:
-        - bearerAuth: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                ai_score:
-                  type: integer
-                algorithm_score:
-                  type: integer
-                db_score:
-                  type: integer
-                web_score:
-                  type: integer
-                dependency_score:
-                  type: integer
-                advice:
-                  type: string
-      responses:
-        "201":
-          description: Created
+                  user:
+                    $ref: "#/components/schemas/UserCredential"
 
 components:
   securitySchemes:
@@ -96,3 +280,221 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+      description: RS256で署名。issuer/audienceは understanding-debt-checker-next / understanding-debt-checker-rails 固定。
+
+  responses:
+    Unauthorized:
+      description: 未認証・トークン不正
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Unauthorized
+
+  schemas:
+    User:
+      type: object
+      description: usersテーブルの内容そのまま。認証情報(email/provider等)はUserCredential側にある。
+      properties:
+        id:
+          type: integer
+        status:
+          type: string
+          enum: [active, deleted]
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    UserCredential:
+      type: object
+      description: |
+        認証プロバイダごとの資格情報。password_digestはAPIレスポンスには含めない
+        （login_email/guest_loginともexcept: :password_digestでシリアライズしている）。
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        provider:
+          type: string
+          enum: [google, email, guest]
+        uid:
+          type: string
+        email:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+
+    CategoryWithQuestions:
+      allOf:
+        - $ref: "#/components/schemas/Category"
+        - type: object
+          properties:
+            questions:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  content:
+                    type: string
+                  choices:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        content:
+                          type: string
+                        score:
+                          type: integer
+                          minimum: 1
+                          maximum: 3
+
+    CategoryWithSummaries:
+      allOf:
+        - $ref: "#/components/schemas/Category"
+        - type: object
+          properties:
+            category_summaries:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  min_score:
+                    type: integer
+                  max_score:
+                    type: integer
+                  summary:
+                    type: string
+
+    Question:
+      type: object
+      properties:
+        id:
+          type: integer
+        content:
+          type: string
+        category:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+
+    Choice:
+      type: object
+      properties:
+        id:
+          type: integer
+        content:
+          type: string
+        score:
+          type: integer
+          minimum: 1
+          maximum: 3
+        question_id:
+          type: integer
+
+    Result:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        ai_score:
+          type: integer
+          minimum: 0
+          maximum: 15
+        algorithm_score:
+          type: integer
+          minimum: 0
+          maximum: 15
+        db_score:
+          type: integer
+          minimum: 0
+          maximum: 15
+        web_score:
+          type: integer
+          minimum: 0
+          maximum: 15
+        dependency_score:
+          type: integer
+          minimum: 0
+          maximum: 100
+        advices:
+          type: object
+          description: "カテゴリのslugをキーとしたアドバイス。例: advices.ai.name / advices.ai.summary / advices.ai.advices（string配列）"
+          additionalProperties:
+            type: object
+            properties:
+              name:
+                type: string
+              summary:
+                type: string
+              advices:
+                type: array
+                items:
+                  type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    Pagination:
+      type: object
+      properties:
+        current:
+          type: integer
+        previous:
+          type: integer
+          nullable: true
+        next:
+          type: integer
+          nullable: true
+        limit_value:
+          type: integer
+        pages:
+          type: integer
+        count:
+          type: integer
+
+    ValidationError:
+      type: object
+      properties:
+        code:
+          type: string
+        field:
+          type: string
+        message:
+          type: string
