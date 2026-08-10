@@ -11,7 +11,7 @@ class Api::V1::AuthenticationController < ApplicationController
     credential = UserCredential.find_by(email: params[:email], provider: "email")
 
     if credential&.authenticate(params[:password])
-      render json: { user: credential }
+      render json: { user: credential.as_json(except: :password_digest) }
     else
       render json: {
         code: "invalid_credentials",
