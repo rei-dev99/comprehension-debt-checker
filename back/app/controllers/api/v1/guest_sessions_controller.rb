@@ -12,9 +12,9 @@ class Api::V1::GuestSessionsController < ApplicationController
       provider: "guest",
       uid: email,
       email: email,
-      password_digest: password
+      password: password
     )
 
-    render json: { user: credential }
+    render json: { user: credential.as_json(except: :password_digest) }
   end
 end
