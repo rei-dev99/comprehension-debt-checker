@@ -53,32 +53,32 @@ AIに依存したまま学習を進めると、自力で問題を解決する力
 | トップページ |
 |:-----------:|
 | サービス概要と診断開始ボタンを表示します。 |
-| [![Image from Gyazo](https://i.gyazo.com/15948b73b70b3d3661178db6fdaa3e6e.png)](https://gyazo.com/15948b73b70b3d3661178db6fdaa3e6e) |
+| [![Image from Gyazo](https://i.gyazo.com/86b33f25515365b65dcf307a574a61be.gif)](https://gyazo.com/86b33f25515365b65dcf307a574a61be) |
 
-| ログインページ |
+| ログイン |
 |:-----------:|
 | メールアドレス・Google・ゲストログインから認証方法を選択できます。 |
-| [![Image from Gyazo](https://i.gyazo.com/689a25f9f751bbe0f206ae014cffab3e.png)](https://gyazo.com/689a25f9f751bbe0f206ae014cffab3e) |
+| [![Image from Gyazo](https://i.gyazo.com/81caa756cc530aec2df85d168fd7f373.png)](https://gyazo.com/81caa756cc530aec2df85d168fd7f373) |
 
 | マイページ |
 |:-----------:|
 | ログイン後に表示されるページです。診断開始や診断履歴の確認ができます。|
-| [![Image from Gyazo](https://i.gyazo.com/84e21217149140d5063306f249838dba.png)](https://gyazo.com/84e21217149140d5063306f249838dba) |
+| [![Image from Gyazo](https://i.gyazo.com/312573162b2118b0be144acceb78b8e3.png)](https://gyazo.com/312573162b2118b0be144acceb78b8e3) |
 
 | 質問 |
 |:-----------:|
 | 20問程度の質問に回答し、AI活用習慣や技術理解度を診断します。|
-| [![Image from Gyazo](https://i.gyazo.com/e025ff704da9951f0bb7bf0d841b4943.gif)](https://gyazo.com/e025ff704da9951f0bb7bf0d841b4943) |
+| [![Image from Gyazo](https://i.gyazo.com/4d6ae2b46a4403679753a671f597b959.gif)](https://gyazo.com/4d6ae2b46a4403679753a671f597b959) |
 
-| 診断結果生成 |
+| 診断結果 |
 |:-----------:|
 | カテゴリごとのスコアやAI依存度を可視化し、学習改善のためのアドバイスを表示します。 |
-| [![Image from Gyazo](https://i.gyazo.com/a28459a1a4612848be1223dd80710925.gif)](https://gyazo.com/a28459a1a4612848be1223dd80710925) |
+| [![Image from Gyazo](https://i.gyazo.com/d95106312bc753300b1c92e5f4c8d027.gif)](https://gyazo.com/d95106312bc753300b1c92e5f4c8d027) |
 
-| 診断結果一覧ページ |
+| 診断結果一覧 |
 |:-----------:|
 | 過去の診断結果を一覧で確認し、自分の理解度の変化を振り返ることができます。 |
-| [![Image from Gyazo](https://i.gyazo.com/94e671b99b7acacbf91658d46b5b62ab.png)](https://gyazo.com/94e671b99b7acacbf91658d46b5b62ab) |
+| [![Image from Gyazo](https://i.gyazo.com/47bd24975ad15dc759fffb56ec413e1f.png)](https://gyazo.com/47bd24975ad15dc759fffb56ec413e1f) |
 
 ## 使用技術
 | カテゴリ | 使用技術 |
