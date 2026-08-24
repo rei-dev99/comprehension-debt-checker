@@ -59,10 +59,6 @@ export default function Result() {
 									<p className="text-sm text-gray-400">
 										{new Date(result.created_at).toLocaleDateString()}
 									</p>
-
-									<span className="text-sm bg-blue-100 text-blue-600 px-3 py-1 rounded-full">
-										ID: {result.id}
-									</span>
 								</div>
 
 								<h3 className="text-xl font-semibold mb-2">
