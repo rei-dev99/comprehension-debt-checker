@@ -3,6 +3,7 @@ import Logout from "@/components/atoms/Logout";
 import type { Result } from "@/types/result";
 import { requireAuth } from "../lib/requireAuth";
 import fetchResults from "../lib/results";
+import ConvertDate from "@/components/atoms/ConvertDate";
 
 const categoryFields: {
 	key: "ai_score" | "algorithm_score" | "db_score" | "web_score";
@@ -60,7 +61,7 @@ export default async function Mypage() {
 								最新の診断結果
 							</h3>
 							<span className="text-xs text-zinc-400">
-								{new Date(latest.created_at).toLocaleDateString()}
+								<ConvertDate dateISO={latest.created_at} />
 							</span>
 						</div>
 

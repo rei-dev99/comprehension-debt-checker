@@ -6,6 +6,7 @@ import type { ResultsResponse } from "@/types/result";
 import { requireAuth } from "../lib/requireAuth";
 import fetchResults from "../lib/results";
 import Paginate from "@/components/atoms/Paginate";
+import ConvertDate from "@/components/atoms/ConvertDate";
 
 export default function Result() {
 	const [results, setResults] = useState<ResultsResponse | null>(null);
@@ -56,7 +57,7 @@ export default function Result() {
 							<div className="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition duration-200 border border-gray-100">
 								<div className="flex justify-between items-center mb-4">
 									<p className="text-sm text-gray-400">
-										{new Date(result.created_at).toLocaleDateString()}
+										<ConvertDate dateISO={result.created_at} />
 									</p>
 								</div>
 
