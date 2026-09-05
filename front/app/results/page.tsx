@@ -2,14 +2,13 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import ReactPaginate from "react-paginate";
-import type { Result, ResultsResponse } from "@/types/result";
+import type { ResultsResponse } from "@/types/result";
 import { requireAuth } from "../lib/requireAuth";
 import fetchResults from "../lib/results";
+import Paginate from "@/components/atoms/Paginate";
 
 export default function Result() {
 	const [results, setResults] = useState<ResultsResponse | null>(null);
-
 	const [currentPage, setCurrentPage] = useState(1);
 
 	useEffect(() => {
@@ -77,21 +76,10 @@ export default function Result() {
 						</Link>
 					))}
 
-					<ReactPaginate
-						forcePage={currentPage - 1}
-						breakLabel="..."
-						nextLabel=">"
+					<Paginate
+						currentPage={currentPage}
+						pagination={results.pagination}
 						onPageChange={handlePageChange}
-						pageCount={results.pagination.pages}
-						previousLabel="<"
-						renderOnZeroPageCount={null}
-						// ===== css =====
-						containerClassName="mt-8 flex items-center justify-center gap-2"
-						pageLinkClassName="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full bg-sky-600 text-sm font-bold text-white transition-opacity duration-200 hover:opacity-70"
-						activeLinkClassName="bg-yellow-500 ring-2 ring-yellow-300"
-						previousLinkClassName="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-sky-600 text-sky-600 transition-opacity duration-200 hover:opacity-70"
-						nextLinkClassName="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-sky-600 text-sky-600 transition-opacity duration-200 hover:opacity-70"
-						disabledClassName="hidden"
 					/>
 				</div>
 			) : (

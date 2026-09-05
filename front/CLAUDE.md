@@ -63,9 +63,10 @@ app/
 
 actions/        # Server Actions（handleLogin, handleGuestLogin, handleSignup, handleLogout, handleGoogleLogin）
 components/
-├── header.tsx, footer.tsx     # 共通ヘッダー・フッター
-├── atoms/                     # Login/Logoutボタンなど小さな部品
-└── forms/                     # GuestForm, LoginForm, SignupForm
+├── atoms/                     # Login/Logout/Paginateなど小さな汎用部品
+├── forms/                     # GuestForm, LoginForm, SignupForm
+├── layouts/                   # header.tsx, footer.tsx（ページ全体構造）
+└── features/                  # （将来）特定ページ・ドメインに紐づく複合コンポーネント
 
 types/          # category / question / result の型定義、next-authの型拡張
 proxy.ts        # ルート保護（上記参照。app/の外、frontのルート直下）
