@@ -11,6 +11,7 @@ import {
 	RadarChart,
 } from "recharts";
 import { requireAuth } from "@/app/lib/requireAuth";
+import ConvertDate from "@/components/atoms/ConvertDate";
 import { Result } from "@/types/result";
 import fetchResult from "../../lib/result";
 
@@ -80,6 +81,9 @@ export default function ResultDetail() {
 	return (
 		<div className="text-center py-15">
 			<h2 className="text-3xl font-bold mb-2">診断結果</h2>
+			<p className="text-sm text-gray-400 mb-6">
+				<ConvertDate dateISO={result.created_at} />
+			</p>
 			<div className="flex justify-center items-center gap-6 px-8">
 				<RadarChart
 					cx={300}
