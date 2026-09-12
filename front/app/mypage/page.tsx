@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Logout from "@/components/atoms/Logout";
 import type { Result } from "@/types/result";
+import { getDependencyLevel } from "../lib/dependencyLevel";
 import { requireAuth } from "../lib/requireAuth";
 import fetchResults from "../lib/results";
 import ConvertDate from "@/components/atoms/ConvertDate";
@@ -45,6 +46,7 @@ export default async function Mypage() {
 	const previous: Result | undefined = results[1];
 	const trend =
 		latest && previous ? getDependencyTrend(latest, previous) : null;
+	const level = latest ? getDependencyLevel(latest.dependency_score) : null;
 
 	return (
 		<div className="flex flex-col flex-1 items-center justify-center bg-zinc-50">
@@ -66,10 +68,17 @@ export default async function Mypage() {
 						</div>
 
 						<div className="mb-4 flex flex-wrap items-center gap-3">
-							<span className="text-3xl font-bold text-sky-600">
+							<span className={`text-3xl font-bold ${level?.textClassName}`}>
 								{latest.dependency_score}%
 							</span>
 							<span className="text-sm text-zinc-500">AI依存度</span>
+							{level && (
+								<span
+									className={`rounded-full px-3 py-1 text-xs font-semibold ${level.badgeClassName}`}
+								>
+									{level.emoji} {level.label}
+								</span>
+							)}
 							{trend && (
 								<span
 									className={`rounded-full px-3 py-1 text-xs font-semibold ${trend.className}`}
