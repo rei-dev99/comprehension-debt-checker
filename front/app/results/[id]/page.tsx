@@ -9,7 +9,9 @@ import {
 	PolarRadiusAxis,
 	Radar,
 	RadarChart,
+	ResponsiveContainer,
 } from "recharts";
+import { getDependencyLevel } from "@/app/lib/dependencyLevel";
 import { requireAuth } from "@/app/lib/requireAuth";
 import ConvertDate from "@/components/atoms/ConvertDate";
 import { Result } from "@/types/result";
@@ -64,12 +66,7 @@ export default function ResultDetail() {
 		},
 	];
 
-	const dependencyLevel =
-		result.dependency_score >= 70
-			? "danger"
-			: result.dependency_score >= 40
-				? "warning"
-				: "safe";
+	const level = getDependencyLevel(result.dependency_score);
 
 	const categoryStyles: Record<string, string> = {
 		ai: "bg-blue-50 border-blue-200",
@@ -79,55 +76,61 @@ export default function ResultDetail() {
 	};
 
 	return (
-		<div className="text-center py-15">
+		<div className="mx-auto max-w-5xl px-4 py-15 text-center sm:px-8">
 			<h2 className="text-3xl font-bold mb-2">診断結果</h2>
-			<p className="text-sm text-gray-400 mb-6">
+			<p className="text-sm text-gray-400 mb-8">
 				<ConvertDate dateISO={result.created_at} />
 			</p>
-			<div className="flex justify-center items-center gap-6 px-8">
-				<RadarChart
-					cx={300}
-					cy={250}
-					outerRadius={150}
-					width={600}
-					height={600}
-					data={data}
-				>
-					<PolarGrid />
-					<PolarAngleAxis dataKey="category" />
-					<PolarRadiusAxis />
-					<Radar
-						name="result"
-						dataKey="score"
-						stroke="#8884d8"
-						fill="#8884d8"
-						fillOpacity={0.6}
-					/>
-				</RadarChart>
-				<div key={result.id} className="w-1/2">
-					<p>AI依存度は{result.dependency_score}%です。</p>
-					{dependencyLevel === "danger" && <p>🔴 要注意</p>}
-					{dependencyLevel === "warning" && <p>🟡 注意</p>}
-					{dependencyLevel === "safe" && <p>🟢 良好</p>}
-					{Object.entries(result.advices).map(
-						([slug, { name, summary, advices }]) => (
-							<div
-								key={slug}
-								className={`whitespace-pre-line text-left mt-6 p-4 rounded border ${categoryStyles[slug] ?? ""}`}
-							>
-								<h2>【{name}】</h2>
-								<p>{summary}</p>
-								<h3 className="mt-4">【あなたへのアドバイス】</h3>
-								<ul>
-									{advices.map((a, i) => (
-										<li key={i}>・{a}</li>
-									))}
-								</ul>
-							</div>
-						),
-					)}
+
+			<div className="grid grid-cols-1 items-center gap-6 md:grid-cols-2">
+				<div className="h-80 w-full">
+					<ResponsiveContainer width="100%" height="100%">
+						<RadarChart outerRadius="70%" data={data}>
+							<PolarGrid />
+							<PolarAngleAxis dataKey="category" />
+							<PolarRadiusAxis />
+							<Radar
+								name="result"
+								dataKey="score"
+								stroke="#8884d8"
+								fill="#8884d8"
+								fillOpacity={0.6}
+							/>
+						</RadarChart>
+					</ResponsiveContainer>
+				</div>
+
+				<div className={`rounded-2xl border p-8 ${level.cardClassName}`}>
+					<p className={`text-5xl font-bold ${level.textClassName}`}>
+						{result.dependency_score}%
+					</p>
+					<p className="mt-2 text-sm text-zinc-500">AI依存度</p>
+					<p className={`mt-2 text-lg font-semibold ${level.textClassName}`}>
+						{level.emoji} {level.label}
+					</p>
 				</div>
 			</div>
+
+			<div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2">
+				{Object.entries(result.advices).map(
+					([slug, { name, summary, advices }]) => (
+						<div
+							key={slug}
+							className={`whitespace-pre-line rounded border p-4 text-left ${categoryStyles[slug] ?? ""}`}
+						>
+							<h2>【{name}】</h2>
+							<p>{summary}</p>
+							<h3 className="mt-4">【あなたへのアドバイス】</h3>
+							<ul>
+								{advices.map((a, i) => (
+									<li key={i}>・{a}</li>
+								))}
+							</ul>
+						</div>
+					),
+				)}
+			</div>
+
 			<div className="mt-10">
 				<p>
 					あなたの現在の学習状況をもとに診断しています。
