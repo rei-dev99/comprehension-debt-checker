@@ -50,7 +50,7 @@ export default function Result() {
 							<Link
 								key={result.id}
 								href={`/results/${result.id}`}
-								className="block"
+								className="group block"
 							>
 								<div className="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition duration-200 border border-gray-100">
 									<div className="flex justify-between items-center mb-4">
@@ -78,7 +78,10 @@ export default function Result() {
 										{result.advices.ai?.summary?.substring(0, 150) + "..."}
 									</p>
 									<p className="mt-4 text-blue-500 text-sm font-medium">
-										詳細を見る →
+										詳細を見る{" "}
+										<span className="inline-block transition-transform duration-300 ease-out group-hover:translate-x-1.5 motion-reduce:transition-none">
+											→
+										</span>
 									</p>
 								</div>
 							</Link>
