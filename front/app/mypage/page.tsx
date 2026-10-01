@@ -104,9 +104,12 @@ export default async function Mypage() {
 
 						<Link
 							href={`/results/${latest.id}`}
-							className="mt-4 inline-block text-sm font-medium text-sky-600 hover:underline"
+							className="group mt-4 inline-block text-sm font-medium text-sky-600 hover:underline"
 						>
-							詳細を見る →
+							詳細を見る{" "}
+							<span className="inline-block transition-transform duration-300 ease-out group-hover:translate-x-1.5 motion-reduce:transition-none">
+								→
+							</span>
 						</Link>
 					</div>
 				) : (
