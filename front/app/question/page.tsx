@@ -6,6 +6,7 @@ import { Category } from "@/types/category";
 import submitAnswers from "../lib/answers";
 import fetchCategories from "../lib/categories";
 import { requireAuth } from "../lib/requireAuth";
+import { shuffle } from "../lib/shuffle";
 
 export default function Question() {
 	const [categories, setCategories] = useState<Category[]>([]);
@@ -27,8 +28,18 @@ export default function Question() {
 
 	useEffect(() => {
 		const fetchData = async () => {
-			const data = await fetchCategories();
-			setCategories(data);
+			const data: Category[] = await fetchCategories();
+
+			// 選択肢がscore順に並ぶと回答パターンが固定化されるため、取得時に1度だけシャッフルする
+			const shuffled = data.map((category) => ({
+				...category,
+				questions: category.questions.map((question) => ({
+					...question,
+					choices: shuffle(question.choices),
+				})),
+			}));
+
+			setCategories(shuffled);
 		};
 
 		fetchData();
