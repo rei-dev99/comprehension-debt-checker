@@ -53,32 +53,32 @@ AIに依存したまま学習を進めると、自力で問題を解決する力
 | トップページ |
 |:-----------:|
 | サービス概要と診断開始ボタンを表示します。 |
-| [![Image from Gyazo](https://i.gyazo.com/86b33f25515365b65dcf307a574a61be.gif)](https://gyazo.com/86b33f25515365b65dcf307a574a61be) |
+| <img width="1448" height="816" alt="スクリーンショット 2026-10-13 6 25 21" src="https://github.com/user-attachments/assets/645d0c2a-e737-405d-a6fd-bc3b45d78f68" /> |
 
 | ログイン |
 |:-----------:|
 | メールアドレス・Google・ゲストログインから認証方法を選択できます。 |
-| [![Image from Gyazo](https://i.gyazo.com/81caa756cc530aec2df85d168fd7f373.png)](https://gyazo.com/81caa756cc530aec2df85d168fd7f373) |
+| <img width="1301" height="748" alt="スクリーンショット 2026-10-13 6 25 54" src="https://github.com/user-attachments/assets/b515fe75-714d-4ec8-a8fa-25a17c3ca481" /> |
 
 | マイページ |
 |:-----------:|
 | ログイン後に表示されるページです。診断開始や診断履歴の確認ができます。|
-| [![Image from Gyazo](https://i.gyazo.com/312573162b2118b0be144acceb78b8e3.png)](https://gyazo.com/312573162b2118b0be144acceb78b8e3) |
+| <img width="1350" height="808" alt="スクリーンショット 2026-10-13 6 27 32" src="https://github.com/user-attachments/assets/0db6799e-ac14-43f1-af01-1d04f7030c15" /> |
 
 | 質問 |
 |:-----------:|
 | 20問程度の質問に回答し、AI活用習慣や技術理解度を診断します。|
-| [![Image from Gyazo](https://i.gyazo.com/4d6ae2b46a4403679753a671f597b959.gif)](https://gyazo.com/4d6ae2b46a4403679753a671f597b959) |
+| <img width="1377" height="817" alt="スクリーンショット 2026-10-13 6 27 57" src="https://github.com/user-attachments/assets/95361b0f-f638-4177-bd00-26794ecdcba6" /> |
 
 | 診断結果 |
 |:-----------:|
 | カテゴリごとのスコアやAI依存度を可視化し、学習改善のためのアドバイスを表示します。 |
-| [![Image from Gyazo](https://i.gyazo.com/d95106312bc753300b1c92e5f4c8d027.gif)](https://gyazo.com/d95106312bc753300b1c92e5f4c8d027) |
+| <img width="1341" height="818" alt="スクリーンショット 2026-10-13 6 28 16" src="https://github.com/user-attachments/assets/b7e8640e-c65f-4205-9bcf-3b01f618c525" /> |
 
 | 診断結果一覧 |
 |:-----------:|
 | 過去の診断結果を一覧で確認し、自分の理解度の変化を振り返ることができます。 |
-| [![Image from Gyazo](https://i.gyazo.com/47bd24975ad15dc759fffb56ec413e1f.png)](https://gyazo.com/47bd24975ad15dc759fffb56ec413e1f) |
+| <img width="1364" height="809" alt="スクリーンショット 2026-10-13 6 28 34" src="https://github.com/user-attachments/assets/b3aae8bd-9d7e-4eb2-b84b-e7eb1f8b8ca0" /> |
 
 ## 使用技術
 | カテゴリ | 使用技術 |
