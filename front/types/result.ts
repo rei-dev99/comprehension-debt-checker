@@ -4,6 +4,19 @@ export interface CategoryAdvice {
 	advices: string[];
 }
 
+export interface AiAdviceAction {
+	category: string;
+	title: string;
+	detail: string;
+}
+
+/** OpenAIで生成したアドバイス。生成に失敗した診断ではnull */
+export interface AiAdvice {
+	overall: string;
+	ai_usage: string;
+	actions: AiAdviceAction[];
+}
+
 export interface Result {
 	id: number;
 	ai_score: number;
@@ -12,6 +25,7 @@ export interface Result {
 	web_score: number;
 	dependency_score: number;
 	advices: Record<string, CategoryAdvice>;
+	ai_advice: AiAdvice | null;
 	created_at: string;
 }
 

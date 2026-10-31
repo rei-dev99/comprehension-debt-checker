@@ -43,6 +43,14 @@ docker compose exec back rubocop -A   # 自動修正
 - JWTのpayloadに含まれる`provider`+`uid`で`UserCredential`を検索し、なければ`User`と`UserCredential`をその場で自動作成する（Google/ゲスト/メールいずれも同じ経路）
 - `provider == "email"`のときのみ`UserCredential`に`email`・`password`のバリデーションが効く（`has_secure_password validations: false`でOAuth/ゲストはパスワード不要にしている）
 
+## OpenAI（AIアドバイス生成）
+- gem: `ruby-openai`。設定は`config/initializers/openai.rb`
+- 環境変数（`back/.env`。値はコミットしない）
+  - `OPENAI_ACCESS_TOKEN`: APIキー。未設定ならAI生成をスキップし、`ai_advice`はnullになる
+  - `OPENAI_MODEL`: 任意。既定は`gpt-6-luna`
+- `POST /api/v1/results`の中で同期的に生成する。通信エラー・タイムアウト（30秒）・不正な応答のときは`nil`を返し、固定文言の`advices`だけで結果を作成する
+- テスト環境でもdotenvで実キーが読み込まれるため、`spec/support/openai.rb`で全スペックの実APIリクエストを止めている。AIの応答を使うスペックでは`client:`を差し込むか`#call`をスタブする
+
 ## ディレクトリ構造
 ```
 app/
@@ -61,7 +69,8 @@ app/
         │   ├── category_score.rb     # カテゴリ別スコア算出
         │   └── dependency_score.rb   # AI依存度スコア算出
         └── advice/
-            └── generate_advice.rb    # スコアに応じたアドバイス生成
+            ├── generate_advice.rb    # スコアに応じたアドバイス生成（固定文言）
+            └── generate_advice_ai.rb # OpenAIでユーザーごとのアドバイスを生成（results.ai_adviceに保存）
 
 spec/
 ├── requests/api/v1/   # APIリクエストスペック（エンドポイント単位）

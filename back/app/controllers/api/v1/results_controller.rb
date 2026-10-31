@@ -22,9 +22,10 @@ class Api::V1::ResultsController < ApplicationController
     scores = Diagnosis::Scoring::CategoryScore.new(answers).call
     category_results = build_category_results(scores, answers)
     advices = Diagnosis::Advice::GenerateAdvice.new(category_results).call
+    ai_advice = Diagnosis::Advice::GenerateAdviceAi.new(category_results, dependency_score).call
 
     result = Result.create!(
-      build_result_params(scores, dependency_score, advices)
+      build_result_params(scores, dependency_score, advices, ai_advice)
     )
 
     render json: result, status: :created
@@ -41,8 +42,10 @@ class Api::V1::ResultsController < ApplicationController
       {
         category: category.name,
         slug: category.slug,
+        score: score,
         summary: build_summary(category, score),
-        advices: build_advices(category, answers)
+        advices: build_advices(category, answers),
+        answers: build_answers(category, answers)
       }
     end
   end
@@ -67,8 +70,17 @@ class Api::V1::ResultsController < ApplicationController
     end
   end
 
+  # AIへのプロンプト用に、カテゴリ内の「質問文と選んだ選択肢」の組を返す
+  def build_answers(category, answers)
+    Choice.where(id: answers.values).includes(:question).filter_map do |choice|
+      next unless choice.question.category_id == category.id
+
+      { question: choice.question.content, answer: choice.content }
+    end
+  end
+
   # resultテーブルを見直して固定のカテゴリー関係なくなるように今後保守する。
-  def build_result_params(scores, dependency_score, advices)
+  def build_result_params(scores, dependency_score, advices, ai_advice)
     {
       ai_score: find_score(scores, "AI活用習慣"),
       algorithm_score: find_score(scores, "アルゴリズム基礎"),
@@ -76,6 +88,7 @@ class Api::V1::ResultsController < ApplicationController
       web_score: find_score(scores, "Web基礎"),
       dependency_score: dependency_score,
       advices: advices,
+      ai_advice: ai_advice,
       user_id: @current_user.id
     }
   end
