@@ -74,8 +74,9 @@ export default function Result() {
 									</div>
 
 									<p className="text-gray-600">
-										{"【" + result.advices.ai?.name + "】"}
-										{result.advices.ai?.summary?.substring(0, 150) + "..."}
+										{result.ai_advice
+											? `${result.ai_advice.overall.substring(0, 150)}...`
+											: `【${result.advices.ai?.name}】${result.advices.ai?.summary?.substring(0, 150)}...`}
 									</p>
 									<p className="mt-4 text-blue-500 text-sm font-medium">
 										詳細を見る{" "}

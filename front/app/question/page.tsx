@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import DiagnosisLoadingModal from "@/components/features/DiagnosisLoadingModal";
 import { Category } from "@/types/category";
 import submitAnswers from "../lib/answers";
 import fetchCategories from "../lib/categories";
@@ -12,6 +13,7 @@ export default function Question() {
 	const [categories, setCategories] = useState<Category[]>([]);
 	const [answers, setAnswers] = useState<{ [key: number]: number }>({});
 	const [currentCategoryIndex, setcurrentCategoryIndex] = useState<number>(0);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const router = useRouter();
 
@@ -72,12 +74,16 @@ export default function Question() {
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
+		if (isSubmitting) return;
 
+		// AIアドバイスの生成で数秒かかるため、完了まで送信ボタンを無効にして二重送信を防ぐ
+		setIsSubmitting(true);
 		try {
 			const result = await submitAnswers(answers);
 			router.push(`/results/${result.id}`);
 		} catch (error) {
 			console.error(error);
+			setIsSubmitting(false);
 		}
 	};
 
@@ -169,9 +175,9 @@ export default function Question() {
 						<button
 							className="rounded-2xl bg-sky-500 px-8 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-sky-600 disabled:cursor-not-allowed disabled:opacity-40"
 							type="submit"
-							disabled={!disable}
+							disabled={!disable || isSubmitting}
 						>
-							送信
+							{isSubmitting ? "診断中..." : "送信"}
 						</button>
 					) : (
 						<button
@@ -185,6 +191,8 @@ export default function Question() {
 					)}
 				</div>
 			</form>
+
+			{isSubmitting && <DiagnosisLoadingModal />}
 		</div>
 	);
 }

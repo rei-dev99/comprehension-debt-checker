@@ -188,6 +188,40 @@ RSpec.describe 'Api::V1::Results', type: :request do
         expect(json['advices']['ai']['summary']).to eq("AI活用習慣まとめ")
         expect(json['dependency_score']).to eq(65)
       end
+
+      context 'when AI advice is generated' do
+        let(:ai_advice) do
+          {
+            "overall" => "全体の傾向です。",
+            "ai_usage" => "AIとの向き合い方です。",
+            "actions" => [ { "category" => "Web基礎", "title" => "行動", "detail" => "詳細" } ]
+          }
+        end
+
+        before do
+          allow_any_instance_of(Diagnosis::Advice::GenerateAdviceAi)
+            .to receive(:call)
+            .and_return(ai_advice)
+        end
+
+        it 'saves and returns ai_advice' do
+          post '/api/v1/results', headers: headers, params: request_params.to_json
+
+          expect(response).to have_http_status(:created)
+          expect(response.parsed_body['ai_advice']).to eq(ai_advice)
+          expect(Result.last.ai_advice).to eq(ai_advice)
+        end
+      end
+
+      context 'when AI advice generation fails' do
+        it 'still creates result with ai_advice null' do
+          post '/api/v1/results', headers: headers, params: request_params.to_json
+
+          expect(response).to have_http_status(:created)
+          expect(response.parsed_body['ai_advice']).to be_nil
+          expect(response.parsed_body['advices']).to be_present
+        end
+      end
     end
   end
 end

@@ -464,6 +464,29 @@ components:
                 type: array
                 items:
                   type: string
+        ai_advice:
+          type: object
+          nullable: true
+          description: "OpenAIで生成したアドバイス。APIキー未設定・生成失敗時はnull（固定文言のadvicesのみ返る）"
+          properties:
+            overall:
+              type: string
+              description: 診断結果全体から読み取れる傾向・強み・伸びしろ
+            ai_usage:
+              type: string
+              description: ユーザーに合ったAIとの向き合い方
+            actions:
+              type: array
+              description: 次の1週間で取り組む行動（3件）
+              items:
+                type: object
+                properties:
+                  category:
+                    type: string
+                  title:
+                    type: string
+                  detail:
+                    type: string
         created_at:
           type: string
           format: date-time

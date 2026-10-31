@@ -14,6 +14,7 @@ import {
 import { getDependencyLevel } from "@/app/lib/dependencyLevel";
 import { requireAuth } from "@/app/lib/requireAuth";
 import ConvertDate from "@/components/atoms/ConvertDate";
+import AiAdviceCard from "@/components/features/AiAdviceCard";
 import { Result } from "@/types/result";
 import fetchResult from "../../lib/result";
 
@@ -111,33 +112,30 @@ export default function ResultDetail() {
 				</div>
 			</div>
 
-			<div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2">
-				{Object.entries(result.advices).map(
-					([slug, { name, summary, advices }]) => (
-						<div
-							key={slug}
-							className={`whitespace-pre-line rounded border p-4 text-left ${categoryStyles[slug] ?? ""}`}
-						>
-							<h2>【{name}】</h2>
-							<p>{summary}</p>
-							<h3 className="mt-4">【あなたへのアドバイス】</h3>
-							<ul>
-								{advices.map((a, i) => (
-									<li key={i}>・{a}</li>
-								))}
-							</ul>
-						</div>
-					),
-				)}
-			</div>
-
-			<div className="mt-10">
-				<p>
-					あなたの現在の学習状況をもとに診断しています。
-					<br />
-					診断結果は現時点での傾向ですので、学習を続けた後にもう一度診断すると、成長を確認できます。
-				</p>
-			</div>
+			{/* AIアドバイスがない結果（機能追加前・生成失敗時）だけ、固定文言のアドバイスを表示する */}
+			{result.ai_advice ? (
+				<AiAdviceCard aiAdvice={result.ai_advice} />
+			) : (
+				<div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2">
+					{Object.entries(result.advices).map(
+						([slug, { name, summary, advices }]) => (
+							<div
+								key={slug}
+								className={`whitespace-pre-line rounded border p-4 text-left ${categoryStyles[slug] ?? ""}`}
+							>
+								<h2>【{name}】</h2>
+								<p>{summary}</p>
+								<h3 className="mt-4">【あなたへのアドバイス】</h3>
+								<ul>
+									{advices.map((a, i) => (
+										<li key={i}>・{a}</li>
+									))}
+								</ul>
+							</div>
+						),
+					)}
+				</div>
+			)}
 
 			<div className="mt-6 flex justify-center flex-col md:flex-row gap-4">
 				<Link
